@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Edit Event</title>
+  <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Edit Event</h2>
+
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <form action="/edit/<%= event._id %>" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" name="title" value="<%= event.title %>" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+          <textarea class="form-control" name="description" rows="2"><%= event.description || '' %></textarea>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Location</label>
+            <select class="form-select" name="location" required>
+              <% locations.forEach(loc => { %>
+                <option value="<%= loc %>" <%= event.location === loc ? 'selected' : '' %>><%= loc %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category" required>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat %>" <%= event.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" name="date" required
+                   value="<%= (event.date instanceof Date) ? event.date.toISOString().slice(0, 10) : event.date %>">
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Time</label>
+            <input type="text" class="form-control" name="time" value="<%= event.time %>" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Update Event</button>
+        <a href="/schedule" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-dark mp-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand mp-brand" href="/">
+      <img src="/images/trishul-icon.png" alt="" class="mp-brand-icon">
+      Mahapath
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mpNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mpNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/map">Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="/schedule">Schedule</a></li>
+
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <li class="nav-item"><a class="nav-link" href="/add">+ Add Event</a></li>
+          <li class="nav-item ms-lg-2">
+            <span class="nav-link mp-user">👤 <%= currentUser.username %></span>
+          </li>
+          <li class="nav-item">
+            <form action="/logout" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-sm mp-btn-outline">Logout</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li class="nav-item ms-lg-2"><a class="btn btn-sm mp-btn-outline" href="/login">Organizer Login</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

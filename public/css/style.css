@@ -1,0 +1,345 @@
+/* ===== Mahapath — warm spiritual theme (saffron / maroon / gold) ===== */
+
+:root {
+  --mp-saffron: #FF9933;
+  --mp-saffron-dark: #E07B00;
+  --mp-maroon: #6B0F1A;
+  --mp-maroon-deep: #4A0A12;
+  --mp-gold: #D4AF37;
+  --mp-cream: #FFF8ED;
+  --mp-cream-2: #FFF1DC;
+  --mp-text: #3A2418;
+  --mp-heading-font: 'Marcellus', serif;
+  --mp-body-font: 'Philosopher', serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--mp-body-font);
+  color: var(--mp-text);
+  background: var(--mp-cream);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main, .mp-page {
+  flex: 1;
+}
+
+h1, h2, h3, h4, .mp-heading {
+  font-family: var(--mp-heading-font);
+}
+
+a { color: var(--mp-maroon); }
+a:hover { color: var(--mp-saffron-dark); }
+
+/* ---------- Navbar ---------- */
+.mp-navbar {
+  background: linear-gradient(90deg, var(--mp-maroon) 0%, var(--mp-maroon-deep) 100%);
+  border-bottom: 3px solid var(--mp-gold);
+}
+
+.mp-brand {
+  font-family: var(--mp-heading-font);
+  font-size: 1.5rem;
+  color: var(--mp-cream) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mp-brand-icon {
+  height: 28px;
+  width: 28px;
+  object-fit: contain;
+}
+
+.mp-navbar .nav-link {
+  color: rgba(255, 248, 237, 0.85) !important;
+  font-weight: 600;
+}
+
+.mp-navbar .nav-link:hover {
+  color: var(--mp-saffron) !important;
+}
+
+.mp-user {
+  color: var(--mp-cream) !important;
+  font-family: var(--mp-heading-font);
+}
+
+.mp-btn-outline {
+  border: 1.5px solid var(--mp-saffron);
+  color: var(--mp-saffron) !important;
+  background: transparent;
+  font-weight: 600;
+}
+
+.mp-btn-outline:hover {
+  background: var(--mp-saffron);
+  color: var(--mp-maroon-deep) !important;
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+  position: relative;
+  min-height: 62vh;
+  background: linear-gradient(rgba(74, 10, 18, 0.72), rgba(107, 15, 26, 0.55)), url('/images/mahakumbh-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(212, 175, 55, 0.05) 0px,
+    rgba(212, 175, 55, 0.05) 2px,
+    transparent 2px,
+    transparent 14px
+  );
+  pointer-events: none;
+}
+
+.hero-section h1 {
+  font-family: var(--mp-heading-font);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.hero-section .lead {
+  font-family: var(--mp-body-font);
+  font-size: 1.25rem;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+}
+
+.mp-hero-search {
+  max-width: 560px;
+  margin: 1.75rem auto 0;
+}
+
+.mp-hero-search .form-control {
+  border-radius: 999px 0 0 999px;
+  border: none;
+  padding: 0.7rem 1.2rem;
+}
+
+.mp-hero-search .btn {
+  border-radius: 0 999px 999px 0;
+  background: var(--mp-saffron);
+  border: none;
+  color: var(--mp-maroon-deep);
+  font-weight: 700;
+  padding: 0.7rem 1.4rem;
+}
+
+.mp-hero-search .btn:hover {
+  background: var(--mp-gold);
+}
+
+/* ---------- Section headings ---------- */
+.mp-section-title {
+  font-family: var(--mp-heading-font);
+  color: var(--mp-maroon);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.mp-section-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  background: var(--mp-saffron);
+  margin-top: 0.4rem;
+  border-radius: 3px;
+}
+
+/* ---------- Cards ---------- */
+.mp-card {
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-top: 4px solid var(--mp-saffron);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(107, 15, 26, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  height: 100%;
+}
+
+.mp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(107, 15, 26, 0.16);
+}
+
+.mp-card .card-title {
+  font-family: var(--mp-heading-font);
+  color: var(--mp-maroon);
+}
+
+.mp-badge {
+  background: var(--mp-cream-2);
+  color: var(--mp-maroon);
+  border: 1px solid var(--mp-gold);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.3em 0.7em;
+  border-radius: 999px;
+}
+
+.mp-btn-primary {
+  background: var(--mp-maroon);
+  border: none;
+  color: var(--mp-cream);
+  font-weight: 600;
+}
+
+.mp-btn-primary:hover {
+  background: var(--mp-maroon-deep);
+  color: var(--mp-saffron);
+}
+
+.mp-btn-warning {
+  background: var(--mp-saffron);
+  border: none;
+  color: var(--mp-maroon-deep);
+  font-weight: 700;
+}
+
+.mp-btn-warning:hover {
+  background: var(--mp-gold);
+}
+
+.mp-btn-danger {
+  background: transparent;
+  border: 1.5px solid #a83232;
+  color: #a83232;
+  font-weight: 600;
+}
+
+.mp-btn-danger:hover {
+  background: #a83232;
+  color: #fff;
+}
+
+/* ---------- Filter bar ---------- */
+.mp-filter-bar {
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(107, 15, 26, 0.06);
+}
+
+.mp-filter-bar label {
+  font-weight: 600;
+  color: var(--mp-maroon);
+  font-size: 0.85rem;
+}
+
+/* ---------- Forms ---------- */
+.mp-form-card {
+  background: #fff;
+  border-radius: 16px;
+  border-top: 5px solid var(--mp-maroon);
+  box-shadow: 0 8px 28px rgba(107, 15, 26, 0.10);
+  padding: 2rem;
+}
+
+.mp-form-card h2 {
+  color: var(--mp-maroon);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--mp-saffron);
+  box-shadow: 0 0 0 0.2rem rgba(255, 153, 51, 0.2);
+}
+
+/* ---------- Auth pages ---------- */
+.mp-auth-wrap {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+}
+
+.mp-auth-card {
+  max-width: 420px;
+  width: 100%;
+}
+
+/* ---------- Map ---------- */
+#map {
+  height: 600px;
+  width: 100%;
+  border-radius: 14px;
+  border: 3px solid var(--mp-cream-2);
+  box-shadow: 0 6px 20px rgba(107, 15, 26, 0.12);
+}
+
+/* ---------- Motif divider ---------- */
+.mp-motif-divider {
+  width: 100%;
+  color: var(--mp-gold);
+  line-height: 0;
+}
+
+.mp-motif-divider svg {
+  width: 100%;
+  height: 20px;
+}
+
+.mp-motif-divider path {
+  fill: none;
+  stroke: var(--mp-gold);
+  stroke-width: 2;
+}
+
+/* ---------- Footer ---------- */
+.mp-footer {
+  background: var(--mp-maroon-deep);
+  color: var(--mp-cream);
+  margin-top: 3rem;
+}
+
+.mp-footer-title {
+  font-family: var(--mp-heading-font);
+  font-size: 1.2rem;
+  color: var(--mp-saffron);
+}
+
+.mp-footer-sub {
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.mp-footer-copy {
+  opacity: 0.6;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+/* ---------- Empty state ---------- */
+.mp-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #8a6a5a;
+}
+
+/* ---------- Error / 404 ---------- */
+.mp-error-wrap {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}

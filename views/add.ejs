@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Add Event</title>
+  <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Add New Mahakumbh Event</h2>
+
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <form action="/add" method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Event Title</label>
+          <input type="text" class="form-control" id="title" name="title" required value="<%= values.title || '' %>">
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description <span class="text-muted">(optional)</span></label>
+          <textarea class="form-control" id="description" name="description" rows="2"><%= values.description || '' %></textarea>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="location" class="form-label">Location</label>
+            <select class="form-select" id="location" name="location" required>
+              <option value="">Select Location</option>
+              <% locations.forEach(loc => { %>
+                <option value="<%= loc %>" <%= values.location === loc ? 'selected' : '' %>><%= loc %></option>
+              <% }) %>
+            </select>
+            <div class="form-text">Only these locations can be plotted on the map.</div>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat %>" <%= values.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" required value="<%= values.date || '' %>">
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label for="time" class="form-label">Time</label>
+            <input type="text" class="form-control" id="time" name="time" required placeholder="5:00 AM" value="<%= values.time || '' %>">
+          </div>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Add Event</button>
+        <a href="/schedule" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

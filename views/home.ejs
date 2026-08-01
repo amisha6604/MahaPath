@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Home</title>
+  <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<header class="hero-section text-white d-flex align-items-center justify-content-center">
+  <div class="text-center z-2 px-3">
+    <h1 class="display-4 fw-bold">🚩 Welcome to Mahapath</h1>
+    <p class="lead">Your spiritual path through the Mahakumbh, visualized and scheduled</p>
+
+    <form action="/schedule" method="GET" class="mp-hero-search d-flex">
+      <input type="text" name="search" class="form-control" placeholder="Search events, e.g. Shahi Snan...">
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </div>
+</header>
+
+<main class="mp-page">
+  <section class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">📅 Upcoming Events</h2>
+      <a href="/schedule" class="mp-btn-outline btn btn-sm" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">View full schedule &rarr;</a>
+    </div>
+
+    <div class="row g-4">
+      <% if (!events || events.length === 0) { %>
+        <div class="mp-empty">
+          <p class="fs-5">No upcoming events yet.</p>
+          <% if (currentUser) { %>
+            <a href="/add" class="btn mp-btn-primary mt-2">Add the first event</a>
+          <% } %>
+        </div>
+      <% } %>
+
+      <% events.forEach(event => { %>
+        <div class="col-md-4">
+          <div class="card mp-card">
+            <div class="card-body">
+              <span class="mp-badge mb-2 d-inline-block"><%= event.category %></span>
+              <h5 class="card-title"><%= event.title %></h5>
+              <p class="card-text mb-1">📍 <%= event.location %> &middot; 🕔 <%= event.time %></p>
+              <p class="card-text text-muted">
+                <%= event.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+              </p>
+
+              <% if (currentUser) { %>
+                <a href="/edit/<%= event._id %>" class="btn btn-sm mp-btn-warning mt-2 me-2">Edit</a>
+                <form action="/delete/<%= event._id %>" method="POST" class="d-inline"
+                      onsubmit="return confirm('Are you sure you want to delete this event?');">
+                  <button type="submit" class="btn btn-sm mp-btn-danger mt-2">Delete</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

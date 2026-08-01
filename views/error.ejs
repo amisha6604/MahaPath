@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Error</title>
+  <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="mp-error-wrap">
+  <div>
+    <h1 class="display-4 mp-heading" style="color: var(--mp-maroon);">⚠️ Something went wrong</h1>
+    <p class="fs-5"><%= message || 'Please try again in a moment.' %></p>
+    <a href="/" class="btn mp-btn-primary mt-2">Back to Home</a>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

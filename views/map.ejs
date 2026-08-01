@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Map</title>
+  <%- include('partials/head') %>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <h2 class="mp-section-title mb-4">🗺️ Mahakumbh Map</h2>
+
+    <form action="/map" method="GET" class="mp-filter-bar row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="All">All</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= query.category === cat ? 'selected' : '' %>><%= cat %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Location</label>
+        <select name="location" class="form-select">
+          <option value="All">All</option>
+          <% locations.forEach(loc => { %>
+            <option value="<%= loc %>" <%= query.location === loc ? 'selected' : '' %>><%= loc %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-4 d-flex align-items-end gap-2">
+        <button type="submit" class="btn mp-btn-primary">Apply</button>
+        <a href="/map" class="btn mp-btn-outline" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Clear</a>
+      </div>
+    </form>
+
+    <% if (skippedCount > 0) { %>
+      <p class="text-muted small">
+        ⚠️ <%= skippedCount %> event(s) aren't shown because their location isn't mapped to coordinates yet.
+      </p>
+    <% } %>
+
+    <div id="map"></div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([25.35, 82.4], 8); // roughly centered between Prayagraj & Varanasi
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const events = <%- JSON.stringify(mappedEvents || []) %>;
+
+  if (events.length === 0) {
+    L.popup()
+      .setLatLng([25.35, 82.4])
+      .setContent('No mapped events yet.')
+      .openOn(map);
+  }
+
+  const markers = [];
+  events.forEach(event => {
+    const marker = L.marker(event.latlng)
+      .addTo(map)
+      .bindPopup(`🚩 <strong>${event.title}</strong><br>${event.location}<br>🏷️ ${event.category}<br>🕔 ${event.time} · ${event.date}`);
+    markers.push(marker);
+  });
+
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.2));
+  }
+</script>
+
+</body>
+</html>
