@@ -74,6 +74,19 @@ a:hover { color: var(--mp-saffron-dark); }
   font-family: var(--mp-heading-font);
 }
 
+.mp-role-tag {
+  font-family: var(--mp-body-font);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 153, 51, 0.18);
+  color: var(--mp-saffron);
+  border: 1px solid var(--mp-saffron);
+  border-radius: 999px;
+  padding: 0.1em 0.5em;
+  margin-left: 0.3em;
+}
+
 .mp-btn-outline {
   border: 1.5px solid var(--mp-saffron);
   color: var(--mp-saffron) !important;

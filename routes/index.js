@@ -1,20 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const mainController = require('../controllers/mainController');
-const { requireAuth } = require('../middleware/auth');
+const profileController = require('../controllers/profileController');
+const { requireAuth, requireRole } = require('../middleware/auth');
+
+const canManageEvents = [requireAuth, requireRole(['organizer', 'admin'])];
 
 // Public routes — anyone can browse
 router.get('/', mainController.home);
 router.get('/map', mainController.map);
 router.get('/schedule', mainController.schedule);
 
-// Organizer-only routes — require login
-router.get('/add', requireAuth, mainController.addForm);
-router.post('/add', requireAuth, mainController.addEvent);
+// Organizer/admin-only routes — visitors are logged in but can't manage events
+router.get('/add', ...canManageEvents, mainController.addForm);
+router.post('/add', ...canManageEvents, mainController.addEvent);
 
-router.get('/edit/:id', requireAuth, mainController.editForm);
-router.post('/edit/:id', requireAuth, mainController.updateEvent);
+router.get('/edit/:id', ...canManageEvents, mainController.editForm);
+router.post('/edit/:id', ...canManageEvents, mainController.updateEvent);
 
-router.post('/delete/:id', requireAuth, mainController.deleteEvent);
+router.post('/delete/:id', ...canManageEvents, mainController.deleteEvent);
+
+// Any logged-in user (visitor, organizer, or admin) can view/edit their own profile
+router.get('/profile', requireAuth, profileController.viewProfile);
+router.post('/profile/password', requireAuth, profileController.changePassword);
 
 module.exports = router;
