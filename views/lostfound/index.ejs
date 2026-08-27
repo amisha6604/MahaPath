@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Lost &amp; Found</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">🔎 Lost &amp; Found</h2>
+      <% if (currentUser) { %>
+        <a href="/lost-found/add" class="btn mp-btn-primary btn-sm">+ Report Lost/Found</a>
+      <% } %>
+    </div>
+
+    <form action="/lost-found" method="GET" class="mp-filter-bar row g-3 mb-4">
+      <div class="col-md-5">
+        <label class="form-label">Report Type</label>
+        <select name="reportType" class="form-select">
+          <option value="All">All</option>
+          <% reportTypes.forEach(t => { %>
+            <option value="<%= t %>" <%= query.reportType === t ? 'selected' : '' %>><%= t %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <option value="All">All</option>
+          <option value="Open" <%= query.status === 'Open' ? 'selected' : '' %>>Open</option>
+          <option value="Resolved" <%= query.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+        </select>
+      </div>
+      <div class="col-md-3 d-flex align-items-end gap-2">
+        <button type="submit" class="btn mp-btn-primary">Filter</button>
+        <a href="/lost-found" class="btn mp-btn-outline" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Clear</a>
+      </div>
+    </form>
+
+    <% if (!reports || reports.length === 0) { %>
+      <div class="mp-empty"><p class="fs-5">No reports match your filters.</p></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% reports.forEach(r => { %>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card mp-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <span class="mp-badge mb-2 d-inline-block"><%= r.reportType %></span>
+                  <span class="badge <%= r.status === 'Open' ? 'bg-warning text-dark' : 'bg-success' %>"><%= r.status %></span>
+                </div>
+                <h5 class="card-title"><%= r.name %></h5>
+                <% if (r.description) { %><p class="card-text small text-muted"><%= r.description %></p><% } %>
+                <% if (r.lastSeenLocation) { %><p class="card-text mb-1">📍 Last seen: <%= r.lastSeenLocation %></p><% } %>
+                <p class="card-text mb-1">📞 <%= r.contactInfo %></p>
+                <p class="card-text text-muted small">
+                  Reported <%= r.createdAt.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </p>
+
+                <% if (canModerate(currentUser, r)) { %>
+                  <% if (r.status === 'Open') { %>
+                    <form action="/lost-found/resolve/<%= r._id %>" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-sm mp-btn-warning mt-2 me-2">Mark Resolved</button>
+                    </form>
+                  <% } %>
+                  <form action="/lost-found/delete/<%= r._id %>" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete this report?');">
+                    <button type="submit" class="btn btn-sm mp-btn-danger mt-2">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

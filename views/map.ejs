@@ -59,24 +59,72 @@
   }).addTo(map);
 
   const events = <%- JSON.stringify(mappedEvents || []) %>;
+  const facilities = <%- JSON.stringify(mappedFacilities || []) %>;
 
-  if (events.length === 0) {
-    L.popup()
-      .setLatLng([25.35, 82.4])
-      .setContent('No mapped events yet.')
-      .openOn(map);
+  // Distinct color per facility type so they're visually distinguishable at a glance
+  const facilityColors = {
+    'Ghat': '#1E88E5',
+    'Hospital': '#E53935',
+    'Police Booth': '#3949AB',
+    'Parking': '#6D4C41',
+    'Medical Camp': '#00897B'
+  };
+
+  function coloredDivIcon(color, emoji) {
+    return L.divIcon({
+      html: `<div style="background:${color}; width:26px; height:26px; border-radius:50% 50% 50% 0; transform: rotate(-45deg); display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);"><span style="transform: rotate(45deg); font-size:13px;">${emoji}</span></div>`,
+      className: '',
+      iconSize: [26, 26],
+      iconAnchor: [13, 26]
+    });
   }
 
-  const markers = [];
+  const facilityEmoji = {
+    'Ghat': '🕉️',
+    'Hospital': '🏥',
+    'Police Booth': '👮',
+    'Parking': '🅿️',
+    'Medical Camp': '⛑️'
+  };
+
+  const allMarkers = [];
+  const eventLayer = L.layerGroup();
+  const facilityLayersByType = {};
+
   events.forEach(event => {
     const marker = L.marker(event.latlng)
-      .addTo(map)
       .bindPopup(`🚩 <strong>${event.title}</strong><br>${event.location}<br>🏷️ ${event.category}<br>🕔 ${event.time} · ${event.date}`);
-    markers.push(marker);
+    marker.addTo(eventLayer);
+    allMarkers.push(marker);
   });
 
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers);
+  facilities.forEach(f => {
+    if (!facilityLayersByType[f.type]) {
+      facilityLayersByType[f.type] = L.layerGroup();
+    }
+    const marker = L.marker(f.latlng, {
+      icon: coloredDivIcon(facilityColors[f.type] || '#888', facilityEmoji[f.type] || '📍')
+    }).bindPopup(`<strong>${f.name}</strong><br>${f.type}${f.description ? '<br>' + f.description : ''}${f.contact ? '<br>📞 ' + f.contact : ''}`);
+    marker.addTo(facilityLayersByType[f.type]);
+    allMarkers.push(marker);
+  });
+
+  eventLayer.addTo(map);
+  Object.values(facilityLayersByType).forEach(layer => layer.addTo(map));
+
+  const overlays = { '🚩 Events': eventLayer };
+  Object.keys(facilityLayersByType).forEach(type => {
+    overlays[`${facilityEmoji[type] || '📍'} ${type}s`] = facilityLayersByType[type];
+  });
+  L.control.layers(null, overlays, { collapsed: false }).addTo(map);
+
+  if (allMarkers.length === 0) {
+    L.popup()
+      .setLatLng([25.35, 82.4])
+      .setContent('No mapped locations yet.')
+      .openOn(map);
+  } else {
+    const group = L.featureGroup(allMarkers);
     map.fitBounds(group.getBounds().pad(0.2));
   }
 </script>

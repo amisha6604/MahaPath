@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Edit Facility</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Edit Facility</h2>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="/facilities/edit/<%= facility._id %>" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" name="name" required value="<%= facility.name %>">
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Type</label>
+            <select class="form-select" name="type" required>
+              <% types.forEach(t => { %>
+                <option value="<%= t %>" <%= facility.type === t ? 'selected' : '' %>><%= t %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Contact <span class="text-muted">(optional)</span></label>
+            <input type="text" class="form-control" name="contact" value="<%= facility.contact || '' %>">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+          <textarea class="form-control" name="description" rows="2"><%= facility.description || '' %></textarea>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Latitude</label>
+            <input type="number" step="any" class="form-control" name="lat" required value="<%= facility.lat %>">
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Longitude</label>
+            <input type="number" step="any" class="form-control" name="lng" required value="<%= facility.lng %>">
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Capacity <span class="text-muted">(optional)</span></label>
+            <input type="number" class="form-control" name="capacity" value="<%= facility.capacity || '' %>">
+          </div>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Update Facility</button>
+        <a href="/facilities" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

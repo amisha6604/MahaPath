@@ -1,4 +1,5 @@
 const Event = require('../models/event');
+const Facility = require('../models/facility');
 const locationCoords = require('../utils/locationCoords');
 
 // Helper: build a Mongoose filter from query params shared by home/schedule/map
@@ -63,10 +64,21 @@ exports.map = async (req, res) => {
 
     const skippedCount = events.length - mappedEvents.length;
 
+    const facilities = await Facility.find();
+    const mappedFacilities = facilities.map(f => ({
+      name: f.name,
+      type: f.type,
+      description: f.description,
+      contact: f.contact,
+      latlng: [f.lat, f.lng]
+    }));
+
     res.render('map', {
       mappedEvents,
+      mappedFacilities,
       skippedCount,
       categories: Event.CATEGORIES,
+      facilityTypes: Facility.TYPES,
       locations: Object.keys(locationCoords),
       query: req.query
     });

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Facilities</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">🏛️ Facilities</h2>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/facilities/add" class="btn mp-btn-primary btn-sm">+ Add Facility</a>
+      <% } %>
+    </div>
+
+    <form action="/facilities" method="GET" class="mp-filter-bar row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label">Type</label>
+        <select name="type" class="form-select">
+          <option value="All">All</option>
+          <% types.forEach(t => { %>
+            <option value="<%= t %>" <%= query.type === t ? 'selected' : '' %>><%= t %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-6 d-flex align-items-end gap-2">
+        <button type="submit" class="btn mp-btn-primary">Filter</button>
+        <a href="/facilities" class="btn mp-btn-outline" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Clear</a>
+      </div>
+    </form>
+
+    <% if (!facilities || facilities.length === 0) { %>
+      <div class="mp-empty"><p class="fs-5">No facilities listed yet.</p></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% facilities.forEach(f => { %>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card mp-card">
+              <div class="card-body">
+                <span class="mp-badge mb-2 d-inline-block"><%= f.type %></span>
+                <h5 class="card-title"><%= f.name %></h5>
+                <% if (f.description) { %><p class="card-text small text-muted"><%= f.description %></p><% } %>
+                <% if (f.contact) { %><p class="card-text mb-1">📞 <%= f.contact %></p><% } %>
+                <% if (f.capacity) { %><p class="card-text mb-1">🅿️ Capacity: <%= f.capacity %></p><% } %>
+
+                <% if (currentUser && currentUser.role === 'admin') { %>
+                  <a href="/facilities/edit/<%= f._id %>" class="btn btn-sm mp-btn-warning mt-2 me-2">Edit</a>
+                  <form action="/facilities/delete/<%= f._id %>" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete this facility?');">
+                    <button type="submit" class="btn btn-sm mp-btn-danger mt-2">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

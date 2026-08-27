@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Add Helpline</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 560px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Add Helpline</h2>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="/helplines/add" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" name="name" required value="<%= values.name || '' %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Number</label>
+          <input type="text" class="form-control" name="number" required value="<%= values.number || '' %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" name="category">
+            <% categories.forEach(c => { %>
+              <option value="<%= c %>" <%= values.category === c ? 'selected' : '' %>><%= c %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+          <textarea class="form-control" name="description" rows="2"><%= values.description || '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Add Helpline</button>
+        <a href="/helplines" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

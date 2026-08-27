@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Report Lost/Found</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Report Lost or Found</h2>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="/lost-found/add" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Report Type</label>
+          <select class="form-select" name="reportType" required>
+            <option value="">Select Type</option>
+            <% reportTypes.forEach(t => { %>
+              <option value="<%= t %>" <%= values.reportType === t ? 'selected' : '' %>><%= t %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Name <span class="text-muted">(person's name, or a short item description)</span></label>
+          <input type="text" class="form-control" name="name" required value="<%= values.name || '' %>" placeholder="e.g. Ramesh Kumar, or 'Blue backpack'">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+          <textarea class="form-control" name="description" rows="2" placeholder="Age, clothing, distinguishing features, item details, etc."><%= values.description || '' %></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Last Seen Location <span class="text-muted">(optional)</span></label>
+          <input type="text" class="form-control" name="lastSeenLocation" value="<%= values.lastSeenLocation || '' %>">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Your Contact Info</label>
+          <input type="text" class="form-control" name="contactInfo" required value="<%= values.contactInfo || '' %>" placeholder="Phone number or email">
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Submit Report</button>
+        <a href="/lost-found" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

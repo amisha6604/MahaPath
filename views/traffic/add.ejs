@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Add Traffic Advisory</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Add Traffic Advisory</h2>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="/traffic/add" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" name="title" required value="<%= values.title || '' %>">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" name="description" rows="2" required><%= values.description || '' %></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Affected Route</label>
+          <input type="text" class="form-control" name="affectedRoute" required value="<%= values.affectedRoute || '' %>" placeholder="e.g. NH19 near Sangam Bridge">
+        </div>
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Severity</label>
+            <select class="form-select" name="severity">
+              <option value="Low" <%= values.severity === 'Low' ? 'selected' : '' %>>Low</option>
+              <option value="Medium" <%= (!values.severity || values.severity === 'Medium') ? 'selected' : '' %>>Medium</option>
+              <option value="High" <%= values.severity === 'High' ? 'selected' : '' %>>High</option>
+            </select>
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" name="startDate" required value="<%= values.startDate || '' %>">
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" name="endDate" required value="<%= values.endDate || '' %>">
+          </div>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Add Advisory</button>
+        <a href="/traffic" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

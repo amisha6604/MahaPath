@@ -35,8 +35,17 @@ app.use(attachUser);
 // Routes
 const mainRoutes = require('./routes/index');
 const authRoutes = require('./routes/auth');
+const facilityRoutes = require('./routes/facilities');
+const lostFoundRoutes = require('./routes/lostfound');
+const helplineRoutes = require('./routes/helplines');
+const trafficRoutes = require('./routes/traffic');
+
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
+app.use('/facilities', facilityRoutes);
+app.use('/lost-found', lostFoundRoutes);
+app.use('/helplines', helplineRoutes);
+app.use('/traffic', trafficRoutes);
 
 // 404 handler — must come after all real routes
 app.use((req, res) => {

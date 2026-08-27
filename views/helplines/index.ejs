@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Helplines</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">☎️ Emergency Helplines</h2>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/helplines/add" class="btn mp-btn-primary btn-sm">+ Add Helpline</a>
+      <% } %>
+    </div>
+
+    <form action="/helplines" method="GET" class="mp-filter-bar row g-3 mb-4">
+      <div class="col-md-8">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="All">All</option>
+          <% categories.forEach(c => { %>
+            <option value="<%= c %>" <%= query.category === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-4 d-flex align-items-end gap-2">
+        <button type="submit" class="btn mp-btn-primary">Filter</button>
+        <a href="/helplines" class="btn mp-btn-outline" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Clear</a>
+      </div>
+    </form>
+
+    <% if (!helplines || helplines.length === 0) { %>
+      <div class="mp-empty"><p class="fs-5">No helplines listed yet.</p></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% helplines.forEach(h => { %>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card mp-card">
+              <div class="card-body">
+                <span class="mp-badge mb-2 d-inline-block"><%= h.category %></span>
+                <h5 class="card-title"><%= h.name %></h5>
+                <p class="card-text fs-4 fw-bold" style="color: var(--mp-maroon);">
+                  <a href="tel:<%= h.number %>" class="text-decoration-none" style="color: inherit;">📞 <%= h.number %></a>
+                </p>
+                <% if (h.description) { %><p class="card-text small text-muted"><%= h.description %></p><% } %>
+
+                <% if (currentUser && currentUser.role === 'admin') { %>
+                  <form action="/helplines/delete/<%= h._id %>" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete this helpline?');">
+                    <button type="submit" class="btn btn-sm mp-btn-danger mt-2">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

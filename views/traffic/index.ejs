@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Traffic Advisories</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">🚧 Traffic Advisories</h2>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/traffic/add" class="btn mp-btn-primary btn-sm">+ Add Advisory</a>
+      <% } %>
+    </div>
+
+    <% if (!diversions || diversions.length === 0) { %>
+      <div class="mp-empty"><p class="fs-5">No traffic advisories right now.</p></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% diversions.forEach(d => { %>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card mp-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
+                  <span class="mp-badge mb-2 d-inline-block">
+                    <%= d.severity %> severity
+                  </span>
+                  <% if (d.isActive) { %>
+                    <span class="badge bg-danger">Active Now</span>
+                  <% } else if (d.startDate > new Date()) { %>
+                    <span class="badge bg-secondary">Upcoming</span>
+                  <% } else { %>
+                    <span class="badge bg-success">Ended</span>
+                  <% } %>
+                </div>
+                <h5 class="card-title"><%= d.title %></h5>
+                <p class="card-text small text-muted"><%= d.description %></p>
+                <p class="card-text mb-1">🛣️ <%= d.affectedRoute %></p>
+                <p class="card-text small text-muted">
+                  <%= d.startDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %>
+                  &ndash;
+                  <%= d.endDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </p>
+
+                <% if (currentUser && currentUser.role === 'admin') { %>
+                  <form action="/traffic/delete/<%= d._id %>" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete this advisory?');">
+                    <button type="submit" class="btn btn-sm mp-btn-danger mt-2">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
