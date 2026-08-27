@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark mp-navbar sticky-top">
-  <div class="container">
+  <div class="container flex-wrap">
     <a class="navbar-brand mp-brand" href="/">
       <img src="/images/trishul-icon.png" alt="" class="mp-brand-icon">
       Mahapath
@@ -7,12 +7,26 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mpNav">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="mpNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center">
+      <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/map">Map</a></li>
         <li class="nav-item"><a class="nav-link" href="/schedule">Schedule</a></li>
+      </ul>
 
+      <form action="/schedule" method="GET" class="d-flex mp-nav-search mx-lg-auto my-2 my-lg-0">
+        <input
+          type="text"
+          name="search"
+          class="form-control form-control-sm"
+          placeholder="Search events..."
+          value="<%= typeof query !== 'undefined' && query.search ? query.search : '' %>"
+        >
+        <button type="submit" class="btn btn-sm mp-nav-search-btn" aria-label="Search">🔍</button>
+      </form>
+
+      <ul class="navbar-nav align-items-lg-center">
         <% if (typeof currentUser !== 'undefined' && currentUser) { %>
           <% if (currentUser.role === 'organizer' || currentUser.role === 'admin') { %>
             <li class="nav-item"><a class="nav-link" href="/add">+ Add Event</a></li>

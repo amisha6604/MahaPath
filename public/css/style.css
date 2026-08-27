@@ -45,6 +45,28 @@ a:hover { color: var(--mp-saffron-dark); }
   border-bottom: 3px solid var(--mp-gold);
 }
 
+.mp-nav-search {
+  max-width: 260px;
+  width: 100%;
+}
+
+.mp-nav-search .form-control {
+  border-radius: 999px 0 0 999px;
+  border: none;
+}
+
+.mp-nav-search-btn {
+  border-radius: 0 999px 999px 0;
+  background: var(--mp-saffron);
+  border: none;
+  color: var(--mp-maroon-deep);
+  padding-inline: 0.75rem;
+}
+
+.mp-nav-search-btn:hover {
+  background: var(--mp-gold);
+}
+
 .mp-brand {
   font-family: var(--mp-heading-font);
   font-size: 1.5rem;
@@ -126,11 +148,12 @@ a:hover { color: var(--mp-saffron-dark); }
 .hero-section h1 {
   font-family: var(--mp-heading-font);
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  font-size: clamp(1.75rem, 5vw + 1rem, 3.5rem);
 }
 
 .hero-section .lead {
   font-family: var(--mp-body-font);
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.25rem);
   text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
@@ -355,4 +378,52 @@ a:hover { color: var(--mp-saffron-dark); }
   justify-content: center;
   text-align: center;
   padding: 2rem;
+}
+
+/* ---------- Mobile responsiveness pass ---------- */
+@media (max-width: 991.98px) {
+  .mp-nav-search {
+    max-width: 100%;
+  }
+
+  .navbar-nav {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-section {
+    min-height: 48vh;
+  }
+
+  .mp-hero-search {
+    max-width: 100%;
+    padding-inline: 0.5rem;
+  }
+
+  #map {
+    height: 400px;
+  }
+
+  .mp-filter-bar {
+    padding: 1rem;
+  }
+
+  .mp-form-card {
+    padding: 1.25rem;
+  }
+
+  .mp-auth-wrap {
+    padding: 1.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  #map {
+    height: 320px;
+  }
+
+  .mp-section-title {
+    font-size: 1.4rem;
+  }
 }

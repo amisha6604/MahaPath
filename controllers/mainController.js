@@ -12,7 +12,12 @@ function buildFilter(query) {
     filter.location = query.location;
   }
   if (query.search) {
-    filter.title = { $regex: query.search.trim(), $options: 'i' };
+    const term = query.search.trim();
+    filter.$or = [
+      { title: { $regex: term, $options: 'i' } },
+      { description: { $regex: term, $options: 'i' } },
+      { location: { $regex: term, $options: 'i' } }
+    ];
   }
   if (query.from || query.to) {
     filter.date = {};
