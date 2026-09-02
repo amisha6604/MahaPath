@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Admin Dashboard</title>
+  <%- include('../partials/head') %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">📊 Admin Dashboard</h2>
+      <a href="/admin/users" class="btn mp-btn-primary btn-sm">Manage Users</a>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= stats.totalEvents %></div>
+          <div class="mp-stat-label">Total Events</div>
+          <div class="mp-stat-sub"><%= stats.upcomingEvents %> upcoming</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= stats.totalFacilities %></div>
+          <div class="mp-stat-label">Facilities</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= stats.openLostFound %></div>
+          <div class="mp-stat-label">Open Lost &amp; Found</div>
+          <div class="mp-stat-sub"><%= stats.resolvedLostFound %> resolved</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card <%= stats.openIncidents > 0 ? 'mp-stat-alert' : '' %>">
+          <div class="mp-stat-num"><%= stats.openIncidents %></div>
+          <div class="mp-stat-label">Open Incidents</div>
+          <div class="mp-stat-sub"><%= stats.totalIncidents %> total</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= stats.activeTraffic %></div>
+          <div class="mp-stat-label">Active Traffic Advisories</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= stats.totalHelplines %></div>
+          <div class="mp-stat-label">Helplines Listed</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= usersByRole.organizer || 0 %></div>
+          <div class="mp-stat-label">Organizers</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="mp-stat-card">
+          <div class="mp-stat-num"><%= usersByRole.visitor || 0 %></div>
+          <div class="mp-stat-label">Visitors</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Events by Category</h5>
+          <canvas id="eventsChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Incidents by Severity</h5>
+          <canvas id="incidentsChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Facilities by Type</h5>
+          <canvas id="facilitiesChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Recent Incidents</h5>
+          <% if (recentIncidents.length === 0) { %>
+            <p class="text-muted small">None yet.</p>
+          <% } %>
+          <% recentIncidents.forEach(inc => { %>
+            <div class="mp-activity-row">
+              <strong><%= inc.title %></strong>
+              <span class="badge mp-sev-badge-<%= inc.severity.toLowerCase() %>"><%= inc.severity %></span>
+              <div class="small text-muted"><%= inc.status %> &middot; <%= inc.createdAt.toLocaleDateString('en-IN') %></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Recent Lost &amp; Found</h5>
+          <% if (recentLostFound.length === 0) { %>
+            <p class="text-muted small">None yet.</p>
+          <% } %>
+          <% recentLostFound.forEach(r => { %>
+            <div class="mp-activity-row">
+              <strong><%= r.name %></strong> — <%= r.reportType %>
+              <div class="small text-muted"><%= r.status %> &middot; <%= r.createdAt.toLocaleDateString('en-IN') %></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mp-form-card">
+          <h5 class="mb-3">Recently Added Events</h5>
+          <% if (recentEvents.length === 0) { %>
+            <p class="text-muted small">None yet.</p>
+          <% } %>
+          <% recentEvents.forEach(e => { %>
+            <div class="mp-activity-row">
+              <strong><%= e.title %></strong>
+              <div class="small text-muted"><%= e.location %> &middot; <%= e.date.toLocaleDateString('en-IN') %></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+<script>
+  const chartFont = { family: 'Philosopher, serif' };
+  const palette = ['#FF9933', '#6B0F1A', '#D4AF37', '#1E88E5', '#00897B', '#8E24AA', '#E53935'];
+
+  function makePieChart(canvasId, dataObj) {
+    const labels = Object.keys(dataObj);
+    const values = Object.values(dataObj);
+    if (labels.length === 0) return;
+    new Chart(document.getElementById(canvasId), {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{ data: values, backgroundColor: palette }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom', labels: { font: chartFont } } }
+      }
+    });
+  }
+
+  makePieChart('eventsChart', <%- JSON.stringify(eventsByCategory) %>);
+  makePieChart('incidentsChart', <%- JSON.stringify(incidentsBySeverity) %>);
+  makePieChart('facilitiesChart', <%- JSON.stringify(facilitiesByType) %>);
+</script>
+
+</body>
+</html>

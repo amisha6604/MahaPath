@@ -40,6 +40,7 @@ const lostFoundRoutes = require('./routes/lostfound');
 const helplineRoutes = require('./routes/helplines');
 const trafficRoutes = require('./routes/traffic');
 const incidentRoutes = require('./routes/incidents');
+const adminRoutes = require('./routes/admin');
 
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
@@ -48,6 +49,7 @@ app.use('/lost-found', lostFoundRoutes);
 app.use('/helplines', helplineRoutes);
 app.use('/traffic', trafficRoutes);
 app.use('/incidents', incidentRoutes);
+app.use('/admin', adminRoutes);
 
 // 404 handler — must come after all real routes
 app.use((req, res) => {

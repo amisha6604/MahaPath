@@ -119,6 +119,48 @@ a:hover { color: var(--mp-saffron-dark); }
 .mp-sev-badge-medium { background: #f9a825; color: #3A2418; }
 .mp-sev-badge-low { background: #689f38; color: #fff; }
 
+/* ---------- Admin dashboard ---------- */
+.mp-stat-card {
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-left: 4px solid var(--mp-saffron);
+  border-radius: 12px;
+  padding: 1rem;
+  height: 100%;
+}
+
+.mp-stat-card.mp-stat-alert {
+  border-left-color: #b71c1c;
+}
+
+.mp-stat-num {
+  font-family: var(--mp-heading-font);
+  font-size: 1.8rem;
+  color: var(--mp-maroon);
+  line-height: 1;
+}
+
+.mp-stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mp-text);
+  margin-top: 0.25rem;
+}
+
+.mp-stat-sub {
+  font-size: 0.75rem;
+  color: #8a6a5a;
+}
+
+.mp-activity-row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--mp-cream-2);
+}
+
+.mp-activity-row:last-child {
+  border-bottom: none;
+}
+
 .mp-brand {
   font-family: var(--mp-heading-font);
   font-size: 1.5rem;
