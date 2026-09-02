@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Report Incident</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4">Report an Incident</h2>
+      <p class="text-muted small">For life-threatening emergencies, call the helplines directly — this report goes to organizers/admins but isn't monitored in real time yet.</p>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="/incidents/add" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" name="title" required value="<%= values.title || '' %>" placeholder="Short summary, e.g. 'Overcrowding near Gate 3'">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" name="description" rows="3" required><%= values.description || '' %></textarea>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category">
+              <% categories.forEach(c => { %>
+                <option value="<%= c %>" <%= values.category === c ? 'selected' : '' %>><%= c %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label class="form-label">Severity</label>
+            <select class="form-select" name="severity">
+              <% severities.forEach(s => { %>
+                <option value="<%= s %>" <%= (values.severity === s || (!values.severity && s === 'Medium')) ? 'selected' : '' %>><%= s %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-control" name="location" required value="<%= values.location || '' %>" placeholder="e.g. Near Sangam Ghat, Gate 3">
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2">Submit Report</button>
+        <a href="/incidents" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
