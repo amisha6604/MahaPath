@@ -2,6 +2,7 @@ const Event = require('../models/event');
 const Facility = require('../models/facility');
 const locationCoords = require('../utils/locationCoords');
 const { currentByFacility } = require('./crowdController');
+const { getForHomepage } = require('./nearbyController');
 
 // Helper: build a Mongoose filter from query params shared by home/schedule/map
 function buildFilter(query) {
@@ -37,8 +38,9 @@ exports.home = async (req, res) => {
     today.setHours(0, 0, 0, 0);
 
     const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 }).limit(6);
+    const nearbyPlaces = await getForHomepage();
 
-    res.render('home', { events });
+    res.render('home', { events, nearbyPlaces });
   } catch (err) {
     console.error('❌ Home error:', err);
     res.status(500).render('error', { message: 'Could not load events right now.' });

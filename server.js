@@ -42,6 +42,8 @@ const trafficRoutes = require('./routes/traffic');
 const incidentRoutes = require('./routes/incidents');
 const adminRoutes = require('./routes/admin');
 const crowdRoutes = require('./routes/crowd');
+const nearbyRoutes = require('./routes/nearby');
+const aboutRoutes = require('./routes/about');
 
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
@@ -52,6 +54,8 @@ app.use('/traffic', trafficRoutes);
 app.use('/incidents', incidentRoutes);
 app.use('/admin', adminRoutes);
 app.use('/crowd', crowdRoutes);
+app.use('/nearby', nearbyRoutes);
+app.use('/about-mahakumbh', aboutRoutes);
 
 // 404 handler — must come after all real routes
 app.use((req, res) => {

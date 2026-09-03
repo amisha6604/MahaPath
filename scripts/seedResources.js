@@ -12,7 +12,6 @@ const Helpline = require('../models/helpline');
 
 const facilities = [
   { name: 'Sangam Ghat', type: 'Ghat', lat: 25.4292, lng: 81.8805, description: 'Confluence of Ganga, Yamuna, and Saraswati rivers — the main bathing point.' },
-  { name: 'Dashashwamedh Ghat Area', type: 'Ghat', lat: 25.3062, lng: 83.0066, description: 'Major ghat, Varanasi.' },
   { name: 'Kumbh Mela Ground Parking', type: 'Parking', lat: 25.4310, lng: 81.8790, capacity: 5000, description: 'Large vehicle parking near the mela ground.' },
   { name: 'Prayagraj Central Hospital (approx.)', type: 'Hospital', lat: 25.4358, lng: 81.8463, contact: '0532-2600000', description: 'General hospital — verify current contact and exact location.' },
   { name: 'Sangam Police Booth', type: 'Police Booth', lat: 25.4295, lng: 81.8800, contact: '112' },

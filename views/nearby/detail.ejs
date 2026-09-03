@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | <%= place.name %></title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="mp-place-hero" style="<%= place.imageUrl ? `background-image: linear-gradient(rgba(74,10,18,0.65), rgba(74,10,18,0.65)), url('${place.imageUrl}');` : '' %>">
+    <div class="container text-center text-white py-5">
+      <span class="mp-badge mb-2 d-inline-block"><%= place.city %></span>
+      <h1 class="mp-heading"><%= place.name %></h1>
+      <% if (place.distanceFromPrayagraj) { %>
+        <p class="mb-0">📍 <%= place.distanceFromPrayagraj %> from Prayagraj</p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="container py-5" style="max-width: 760px;">
+    <div class="mp-form-card mb-4">
+      <h4 class="mb-3">About</h4>
+      <p><%= place.shortDescription %></p>
+    </div>
+
+    <div class="mp-form-card mb-4">
+      <h4 class="mb-3">History &amp; Significance</h4>
+      <p style="white-space: pre-line;"><%= place.history %></p>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <% if (place.mapsUrl) { %>
+        <a href="<%= place.mapsUrl %>" target="_blank" rel="noopener" class="btn mp-btn-primary">Open in Google Maps</a>
+      <% } %>
+      <a href="/nearby" class="btn mp-btn-outline" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">&larr; All Nearby Places</a>
+
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/nearby/edit/<%= place._id %>" class="btn mp-btn-warning">Edit</a>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

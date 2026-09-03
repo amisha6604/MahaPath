@@ -195,6 +195,138 @@ a:hover { color: var(--mp-saffron-dark); }
 .mp-density-high { background: #fb8c00; color: #fff; }
 .mp-density-very-high { background: #e53935; color: #fff; }
 
+/* ---------- Know About Mahakumbh teaser (homepage) ---------- */
+.mp-about-teaser {
+  background: var(--mp-cream-2);
+  padding: 3rem 0;
+}
+
+.mp-about-teaser-image {
+  height: 220px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-saffron) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  box-shadow: 0 8px 24px rgba(107, 15, 26, 0.2);
+}
+
+/* ---------- Nearby places horizontal scroller ---------- */
+.mp-nearby-section {
+  background: #fff;
+  border-top: 1px solid var(--mp-cream-2);
+}
+
+.mp-scroll-row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mp-scroll-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mp-scroll-row::-webkit-scrollbar-thumb {
+  background: var(--mp-saffron);
+  border-radius: 999px;
+}
+
+.mp-scroll-card {
+  flex: 0 0 auto;
+  width: 260px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(107, 15, 26, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mp-scroll-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(107, 15, 26, 0.16);
+  color: inherit;
+}
+
+.mp-scroll-card-image {
+  height: 140px;
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-saffron-dark) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.mp-scroll-card-body {
+  padding: 0.85rem;
+}
+
+/* ---------- Nearby place grid card image (index page) ---------- */
+.mp-place-image {
+  height: 160px;
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-saffron-dark) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #fff;
+  border-radius: 14px 14px 0 0;
+}
+
+/* ---------- Nearby place detail hero ---------- */
+.mp-place-hero {
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-maroon-deep) 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+/* ---------- About Mahakumbh page ---------- */
+.mp-about-hero {
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-maroon-deep) 100%);
+}
+
+.mp-about-nav {
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mp-about-nav-link {
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--mp-maroon);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-left: 3px solid transparent;
+}
+
+.mp-about-nav-link:hover {
+  background: var(--mp-cream-2);
+  border-left-color: var(--mp-saffron);
+  color: var(--mp-maroon);
+}
+
+@media (max-width: 991.98px) {
+  .mp-scroll-card {
+    width: 220px;
+  }
+}
+
 .mp-brand {
   font-family: var(--mp-heading-font);
   font-size: 1.5rem;
