@@ -45,6 +45,14 @@
     <% } %>
 
     <div id="map"></div>
+
+    <div class="mp-legend mt-3">
+      <span class="mp-legend-item"><span class="mp-legend-dot" style="background:#43a047;"></span> Low</span>
+      <span class="mp-legend-item"><span class="mp-legend-dot" style="background:#fdd835;"></span> Medium</span>
+      <span class="mp-legend-item"><span class="mp-legend-dot" style="background:#fb8c00;"></span> High</span>
+      <span class="mp-legend-item"><span class="mp-legend-dot" style="background:#e53935;"></span> Very High</span>
+      <span class="text-muted small ms-2">Crowd density is manually reported by organizers/admins, not live sensor data.</span>
+    </div>
   </div>
 </main>
 
@@ -90,6 +98,29 @@
   const allMarkers = [];
   const eventLayer = L.layerGroup();
   const facilityLayersByType = {};
+  const densityLayer = L.layerGroup();
+
+  const densityStyle = {
+    'Low': { color: '#43a047', radius: 150, fillOpacity: 0.25 },
+    'Medium': { color: '#fdd835', radius: 250, fillOpacity: 0.3 },
+    'High': { color: '#fb8c00', radius: 350, fillOpacity: 0.35 },
+    'Very High': { color: '#e53935', radius: 450, fillOpacity: 0.4 }
+  };
+
+  facilities.forEach(f => {
+    if (f.density && densityStyle[f.density]) {
+      const style = densityStyle[f.density];
+      L.circle(f.latlng, {
+        radius: style.radius,
+        color: style.color,
+        fillColor: style.color,
+        fillOpacity: style.fillOpacity,
+        weight: 1
+      })
+        .bindPopup(`<strong>${f.name}</strong><br>Crowd density: <strong>${f.density}</strong>`)
+        .addTo(densityLayer);
+    }
+  });
 
   events.forEach(event => {
     const marker = L.marker(event.latlng)
@@ -111,11 +142,13 @@
 
   eventLayer.addTo(map);
   Object.values(facilityLayersByType).forEach(layer => layer.addTo(map));
+  densityLayer.addTo(map);
 
   const overlays = { '🚩 Events': eventLayer };
   Object.keys(facilityLayersByType).forEach(type => {
     overlays[`${facilityEmoji[type] || '📍'} ${type}s`] = facilityLayersByType[type];
   });
+  overlays['🔥 Crowd Density'] = densityLayer;
   L.control.layers(null, overlays, { collapsed: false }).addTo(map);
 
   if (allMarkers.length === 0) {

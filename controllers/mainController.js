@@ -1,6 +1,7 @@
 const Event = require('../models/event');
 const Facility = require('../models/facility');
 const locationCoords = require('../utils/locationCoords');
+const { currentByFacility } = require('./crowdController');
 
 // Helper: build a Mongoose filter from query params shared by home/schedule/map
 function buildFilter(query) {
@@ -65,12 +66,14 @@ exports.map = async (req, res) => {
     const skippedCount = events.length - mappedEvents.length;
 
     const facilities = await Facility.find();
+    const densityMap = await currentByFacility();
     const mappedFacilities = facilities.map(f => ({
       name: f.name,
       type: f.type,
       description: f.description,
       contact: f.contact,
-      latlng: [f.lat, f.lng]
+      latlng: [f.lat, f.lng],
+      density: densityMap.has(f._id.toString()) ? densityMap.get(f._id.toString()).density : null
     }));
 
     res.render('map', {

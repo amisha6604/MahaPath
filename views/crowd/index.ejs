@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Crowd Density</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-2">
+      <h2 class="mp-section-title">🔥 Crowd Density</h2>
+      <% if (currentUser && (currentUser.role === 'organizer' || currentUser.role === 'admin')) { %>
+        <a href="/crowd/add" class="btn mp-btn-primary btn-sm">+ Report Density</a>
+      <% } %>
+    </div>
+    <p class="text-muted small mb-4">Reported on the ground by organizers/admins — not live sensor data. See <a href="/map">the map</a> for a visual overlay.</p>
+
+    <% if (!rows || rows.length === 0) { %>
+      <div class="mp-empty"><p class="fs-5">No facilities to report on yet.</p></div>
+    <% } else { %>
+      <div class="row g-4">
+        <% rows.forEach(row => { %>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card mp-card">
+              <div class="card-body">
+                <span class="mp-badge mb-2 d-inline-block"><%= row.facility.type %></span>
+                <h5 class="card-title"><%= row.facility.name %></h5>
+                <% if (row.current) { %>
+                  <span class="badge mp-density-<%= row.current.density.toLowerCase().replace(' ', '-') %>"><%= row.current.density %></span>
+                  <% if (row.current.note) { %><p class="card-text small text-muted mt-2"><%= row.current.note %></p><% } %>
+                  <p class="card-text small text-muted mt-1">
+                    Updated <%= row.current.createdAt.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) %>
+                  </p>
+                <% } else { %>
+                  <p class="text-muted small mt-2">No density reports yet.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

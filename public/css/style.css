@@ -161,6 +161,40 @@ a:hover { color: var(--mp-saffron-dark); }
   border-bottom: none;
 }
 
+/* ---------- Map legend ---------- */
+.mp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+}
+
+.mp-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mp-text);
+}
+
+.mp-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ---------- Crowd density badges ---------- */
+.mp-density-low { background: #43a047; color: #fff; }
+.mp-density-medium { background: #fdd835; color: #3A2418; }
+.mp-density-high { background: #fb8c00; color: #fff; }
+.mp-density-very-high { background: #e53935; color: #fff; }
+
 .mp-brand {
   font-family: var(--mp-heading-font);
   font-size: 1.5rem;
