@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Find Nearest Facility</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <h2 class="mp-section-title mb-2">📍 Find the Nearest Facility</h2>
+    <p class="text-muted mb-4">
+      Straight-line distance, not turn-by-turn directions — use it to see what's closest, then navigate with your preferred maps app.
+    </p>
+
+    <div class="mp-filter-bar row g-3 mb-4">
+      <div class="col-md-5">
+        <label class="form-label">Facility Type</label>
+        <select id="typeSelect" class="form-select">
+          <option value="All">All types</option>
+          <% types.forEach(t => { %>
+            <option value="<%= t %>"><%= t %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-7 d-flex align-items-end gap-2 flex-wrap">
+        <button id="useLocationBtn" type="button" class="btn mp-btn-primary">📡 Use My Location</button>
+        <span class="text-muted small align-self-center">or enter coordinates manually:</span>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Latitude</label>
+        <input type="number" step="any" id="latInput" class="form-control" placeholder="e.g. 25.4292">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Longitude</label>
+        <input type="number" step="any" id="lngInput" class="form-control" placeholder="e.g. 81.8805">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button id="searchBtn" type="button" class="btn mp-btn-warning w-100">Find Nearest</button>
+      </div>
+    </div>
+
+    <div id="statusMsg" class="text-muted mb-3"></div>
+    <div id="results" class="row g-4"></div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+<script>
+  const typeSelect = document.getElementById('typeSelect');
+  const latInput = document.getElementById('latInput');
+  const lngInput = document.getElementById('lngInput');
+  const statusMsg = document.getElementById('statusMsg');
+  const results = document.getElementById('results');
+
+  document.getElementById('useLocationBtn').addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      statusMsg.textContent = 'Geolocation is not supported by your browser — enter coordinates manually instead.';
+      return;
+    }
+    statusMsg.textContent = 'Getting your location...';
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        latInput.value = pos.coords.latitude.toFixed(6);
+        lngInput.value = pos.coords.longitude.toFixed(6);
+        statusMsg.textContent = 'Location found. Click "Find Nearest" to search.';
+      },
+      err => {
+        statusMsg.textContent = 'Could not get your location (permission denied or unavailable) — enter coordinates manually instead.';
+      }
+    );
+  });
+
+  document.getElementById('searchBtn').addEventListener('click', async () => {
+    const lat = parseFloat(latInput.value);
+    const lng = parseFloat(lngInput.value);
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+      statusMsg.textContent = 'Please provide valid latitude and longitude.';
+      return;
+    }
+
+    statusMsg.textContent = 'Searching...';
+    results.innerHTML = '';
+
+    try {
+      const type = typeSelect.value;
+      const res = await fetch(`/nearest/api?lat=${lat}&lng=${lng}&type=${encodeURIComponent(type)}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        statusMsg.textContent = data.error || 'Something went wrong.';
+        return;
+      }
+
+      if (data.results.length === 0) {
+        statusMsg.textContent = 'No facilities found.';
+        return;
+      }
+
+      statusMsg.textContent = `${data.results.length} facilities found, nearest first:`;
+
+      data.results.forEach(f => {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-sm-6 col-lg-4';
+        col.innerHTML = `
+          <div class="card mp-card">
+            <div class="card-body">
+              <span class="mp-badge mb-2 d-inline-block">${f.type}</span>
+              <h5 class="card-title">${f.name}</h5>
+              <p class="card-text fw-bold" style="color: var(--mp-maroon);">📏 ${f.distanceKm} km away</p>
+              ${f.contact ? `<p class="card-text mb-1">📞 ${f.contact}</p>` : ''}
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}" target="_blank" rel="noopener" class="btn btn-sm mp-btn-primary mt-2">Get Directions</a>
+            </div>
+          </div>
+        `;
+        results.appendChild(col);
+      });
+    } catch (err) {
+      statusMsg.textContent = 'Could not reach the server. Please try again.';
+    }
+  });
+</script>
+
+</body>
+</html>

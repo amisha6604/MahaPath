@@ -1,0 +1,36 @@
+<% if (typeof siteNotifications !== 'undefined' && siteNotifications.length > 0) { %>
+  <div id="mpNotifications" class="mp-notif-wrap"></div>
+
+  <script>
+    (function () {
+      const notifications = <%- JSON.stringify(siteNotifications) %>;
+      const wrap = document.getElementById('mpNotifications');
+      const dismissedKey = 'mp-dismissed-notifications';
+
+      let dismissed = [];
+      try {
+        dismissed = JSON.parse(sessionStorage.getItem(dismissedKey) || '[]');
+      } catch (e) {
+        dismissed = [];
+      }
+
+      const visible = notifications.filter(n => !dismissed.includes(n.id));
+      if (visible.length === 0) return;
+
+      visible.forEach(n => {
+        const bar = document.createElement('div');
+        bar.className = `mp-notif mp-notif-${n.severity.toLowerCase()}`;
+        bar.innerHTML = `
+          <a href="${n.link}" class="mp-notif-text">${n.text}</a>
+          <button type="button" class="mp-notif-close" aria-label="Dismiss">&times;</button>
+        `;
+        bar.querySelector('.mp-notif-close').addEventListener('click', () => {
+          dismissed.push(n.id);
+          try { sessionStorage.setItem(dismissedKey, JSON.stringify(dismissed)); } catch (e) {}
+          bar.remove();
+        });
+        wrap.appendChild(bar);
+      });
+    })();
+  </script>
+<% } %>

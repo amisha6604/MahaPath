@@ -32,6 +32,10 @@ app.use(session({
 const { attachUser } = require('./middleware/auth');
 app.use(attachUser);
 
+// Site-wide notification banner (urgent incidents + active traffic advisories)
+const { attachNotifications } = require('./middleware/notifications');
+app.use(attachNotifications);
+
 // Routes
 const mainRoutes = require('./routes/index');
 const authRoutes = require('./routes/auth');
@@ -44,6 +48,7 @@ const adminRoutes = require('./routes/admin');
 const crowdRoutes = require('./routes/crowd');
 const nearbyRoutes = require('./routes/nearby');
 const aboutRoutes = require('./routes/about');
+const nearestRoutes = require('./routes/nearest');
 
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
@@ -56,6 +61,7 @@ app.use('/admin', adminRoutes);
 app.use('/crowd', crowdRoutes);
 app.use('/nearby', nearbyRoutes);
 app.use('/about-mahakumbh', aboutRoutes);
+app.use('/nearest', nearestRoutes);
 
 // 404 handler — must come after all real routes
 app.use((req, res) => {
