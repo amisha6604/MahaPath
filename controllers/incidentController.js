@@ -7,17 +7,26 @@ exports.list = async (req, res) => {
     if (req.query.severity && req.query.severity !== 'All') filter.severity = req.query.severity;
     if (req.query.category && req.query.category !== 'All') filter.category = req.query.category;
 
-    // Most urgent, most recent first: Critical > High > Medium > Low, then newest
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const perPage = 12;
+
+    // Most urgent, most recent first: Critical > High > Medium > Low, then newest.
+    // We page AFTER sorting by severity, so pull a larger recency-sorted batch, sort in JS, then slice.
     const severityOrder = { Critical: 0, High: 1, Medium: 2, Low: 3 };
-    const incidents = await Incident.find(filter).sort({ createdAt: -1 });
-    incidents.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+    const [allMatching, total] = await Promise.all([
+      Incident.find(filter).sort({ createdAt: -1 }).limit(500),
+      Incident.countDocuments(filter)
+    ]);
+    allMatching.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+    const incidents = allMatching.slice((page - 1) * perPage, page * perPage);
 
     res.render('incidents/index', {
       incidents,
       categories: Incident.CATEGORIES,
       severities: Incident.SEVERITIES,
       statuses: Incident.STATUSES,
-      query: req.query
+      query: req.query,
+      pagination: { page, totalPages: Math.max(1, Math.ceil(total / perPage)), total }
     });
   } catch (err) {
     console.error('❌ Incident list error:', err);

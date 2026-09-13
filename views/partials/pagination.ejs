@@ -1,0 +1,19 @@
+<% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) {
+  const qs = { ...query };
+%>
+  <nav class="mp-pagination mt-4" aria-label="Page navigation">
+    <% if (pagination.page > 1) {
+      qs.page = pagination.page - 1;
+    %>
+      <a class="mp-page-link" href="?<%= new URLSearchParams(qs).toString() %>">&larr; Prev</a>
+    <% } %>
+
+    <span class="mp-page-current">Page <%= pagination.page %> of <%= pagination.totalPages %></span>
+
+    <% if (pagination.page < pagination.totalPages) {
+      qs.page = pagination.page + 1;
+    %>
+      <a class="mp-page-link" href="?<%= new URLSearchParams(qs).toString() %>">Next &rarr;</a>
+    <% } %>
+  </nav>
+<% } %>

@@ -16,12 +16,20 @@ exports.list = async (req, res) => {
       filter.reportType = req.query.reportType;
     }
 
-    const reports = await LostFound.find(filter).sort({ createdAt: -1 });
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const perPage = 12;
+
+    const [reports, total] = await Promise.all([
+      LostFound.find(filter).sort({ createdAt: -1 }).skip((page - 1) * perPage).limit(perPage),
+      LostFound.countDocuments(filter)
+    ]);
+
     res.render('lostfound/index', {
       reports,
       reportTypes: LostFound.REPORT_TYPES,
       query: req.query,
-      canModerate
+      canModerate,
+      pagination: { page, totalPages: Math.max(1, Math.ceil(total / perPage)), total }
     });
   } catch (err) {
     console.error('❌ Lost & Found list error:', err);

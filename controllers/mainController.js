@@ -97,13 +97,20 @@ exports.map = async (req, res) => {
 exports.schedule = async (req, res) => {
   try {
     const filter = buildFilter(req.query);
-    const events = await Event.find(filter).sort({ date: 1 });
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const perPage = 12;
+
+    const [events, total] = await Promise.all([
+      Event.find(filter).sort({ date: 1 }).skip((page - 1) * perPage).limit(perPage),
+      Event.countDocuments(filter)
+    ]);
 
     res.render('schedule', {
       events,
       categories: Event.CATEGORIES,
       locations: Object.keys(locationCoords),
-      query: req.query
+      query: req.query,
+      pagination: { page, totalPages: Math.max(1, Math.ceil(total / perPage)), total }
     });
   } catch (err) {
     console.error('❌ Schedule error:', err);

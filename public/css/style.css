@@ -738,3 +738,31 @@ a:hover { color: var(--mp-saffron-dark); }
     font-size: 1.4rem;
   }
 }
+
+/* ---------- Pagination ---------- */
+.mp-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.mp-page-link {
+  color: var(--mp-maroon);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--mp-maroon);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+}
+
+.mp-page-link:hover {
+  background: var(--mp-maroon);
+  color: #fff;
+}
+
+.mp-page-current {
+  font-weight: 600;
+  color: var(--mp-text);
+  font-size: 0.9rem;
+}
