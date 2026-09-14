@@ -28,6 +28,15 @@ const locationCoords = require('../utils/locationCoords');
 
 const DEMO_PASSWORD = 'Demo@1234';
 
+// Faker v9+ removed pattern-string support from phone.number() — these small
+// helpers replace it so the script stays compatible across faker versions.
+function indianMobileNumber() {
+  return '9' + faker.string.numeric(9);
+}
+function indianLandlineNumber() {
+  return `05${faker.string.numeric(2)}-2${faker.string.numeric(6)}`;
+}
+
 const COUNTS = {
   visitors: 60,
   organizers: 12,
@@ -60,14 +69,14 @@ async function seedUsers() {
 
   for (let i = 0; i < COUNTS.visitors; i++) {
     users.push({
-      username: `${faker.internet.userName().toLowerCase().replace(/[^a-z0-9]/g, '')}${i}`,
+      username: `${faker.internet.username().toLowerCase().replace(/[^a-z0-9]/g, '')}${i}`,
       password: hashed,
       role: 'visitor'
     });
   }
   for (let i = 0; i < COUNTS.organizers; i++) {
     users.push({
-      username: `organizer_${faker.internet.userName().toLowerCase().replace(/[^a-z0-9]/g, '')}${i}`,
+      username: `organizer_${faker.internet.username().toLowerCase().replace(/[^a-z0-9]/g, '')}${i}`,
       password: hashed,
       role: 'organizer'
     });
@@ -125,7 +134,12 @@ async function seedEvents(users) {
 }
 
 async function seedExtraFacilities(users) {
-  const existingTypes = await Facility.distinct('type');
+  const existingDemoFacilities = await Facility.countDocuments({ description: { $regex: '\\[Demo data\\]' } });
+  if (existingDemoFacilities > 0) {
+    console.log(`ℹ️ Demo facilities already seeded (${existingDemoFacilities} found) — skipping.`);
+    return;
+  }
+
   const organizers = users.filter(u => u.role === 'organizer' || u.role === 'visitor');
 
   // Base points to jitter around — real Prayagraj-area coordinates
@@ -141,7 +155,7 @@ async function seedExtraFacilities(users) {
       description: `[Demo data] Illustrative ${type.toLowerCase()} entry generated for portfolio purposes — not a real facility.`,
       lat: jitterCoord(base[0], 2),
       lng: jitterCoord(base[1], 2),
-      contact: type === 'Hospital' || type === 'Police Booth' ? faker.phone.number('05##-2######') : '',
+      contact: type === 'Hospital' || type === 'Police Booth' ? indianLandlineNumber() : '',
       capacity: type === 'Parking' || type === 'Medical Camp' ? faker.number.int({ min: 100, max: 3000 }) : undefined,
       createdBy: randomFromArray(organizers)._id
     });
@@ -172,7 +186,7 @@ async function seedLostFound(users) {
         ? `Age ~${faker.number.int({ min: 5, max: 75 })}, ${faker.color.human()} clothing, ${faker.lorem.sentence()}`
         : faker.lorem.sentence(),
       lastSeenLocation: randomFromArray(locations),
-      contactInfo: faker.phone.number('9#########'),
+      contactInfo: indianMobileNumber(),
       status: Math.random() > 0.4 ? 'Open' : 'Resolved',
       reportedBy: randomFromArray(users)._id
     });

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | FAQs</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5" style="max-width: 800px;">
+    <h2 class="mp-section-title mb-4">❓ Frequently Asked Questions</h2>
+
+    <% faqs.forEach((group, gi) => { %>
+      <h5 class="mt-4 mb-2" style="color: var(--mp-maroon);"><%= group.category %></h5>
+      <div class="accordion mb-3" id="faqAccordion<%= gi %>">
+        <% group.items.forEach((item, ii) => { %>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-<%= gi %>-<%= ii %>">
+                <%= item.q %>
+              </button>
+            </h2>
+            <div id="faq-<%= gi %>-<%= ii %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion<%= gi %>">
+              <div class="accordion-body"><%= item.a %></div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% }) %>
+
+    <div class="mp-form-card mt-4 text-center">
+      <p class="mb-2">Still have a question?</p>
+      <a href="/helplines" class="btn mp-btn-primary">Check Helplines</a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
