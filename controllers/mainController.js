@@ -1,5 +1,7 @@
 const Event = require('../models/event');
 const Facility = require('../models/facility');
+const Helpline = require('../models/helpline');
+const NearbyPlace = require('../models/nearbyPlace');
 const locationCoords = require('../utils/locationCoords');
 const { currentByFacility } = require('./crowdController');
 const { getForHomepage } = require('./nearbyController');
@@ -37,10 +39,20 @@ exports.home = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 }).limit(6);
-    const nearbyPlaces = await getForHomepage();
+    const [events, nearbyPlaces, totalEvents, totalFacilities, totalHelplines, totalNearby] = await Promise.all([
+      Event.find({ date: { $gte: today } }).sort({ date: 1 }).limit(6),
+      getForHomepage(),
+      Event.countDocuments(),
+      Facility.countDocuments(),
+      Helpline.countDocuments(),
+      NearbyPlace.countDocuments()
+    ]);
 
-    res.render('home', { events, nearbyPlaces });
+    res.render('home', {
+      events,
+      nearbyPlaces,
+      stats: { totalEvents, totalFacilities, totalHelplines, totalNearby }
+    });
   } catch (err) {
     console.error('❌ Home error:', err);
     res.status(500).render('error', { message: 'Could not load events right now.' });

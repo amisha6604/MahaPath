@@ -21,6 +21,29 @@
 </header>
 
 <main class="mp-page">
+  <section class="mp-stats-bar">
+    <div class="container">
+      <div class="row text-center g-3">
+        <div class="col-6 col-md-3">
+          <div class="mp-stat-num-lg"><%= stats.totalEvents %>+</div>
+          <div class="mp-stat-label-lg">Events Listed</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="mp-stat-num-lg"><%= stats.totalFacilities %>+</div>
+          <div class="mp-stat-label-lg">Facilities Mapped</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="mp-stat-num-lg"><%= stats.totalHelplines %></div>
+          <div class="mp-stat-label-lg">Emergency Helplines</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="mp-stat-num-lg"><%= stats.totalNearby %></div>
+          <div class="mp-stat-label-lg">Nearby Places</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="mp-about-teaser">
     <div class="container">
       <div class="row align-items-center g-4">
@@ -149,6 +172,42 @@
       </div>
     </section>
   <% } %>
+
+  <section class="mp-how-section py-5">
+    <div class="container">
+      <h2 class="mp-section-title text-center mx-auto mb-5" style="max-width: 500px;">How Mahapath Helps You</h2>
+      <div class="row g-4">
+        <div class="col-6 col-md-3 text-center">
+          <div class="mp-how-icon">🗺️</div>
+          <h6 class="mt-2">Find Your Way</h6>
+          <p class="small text-muted">See events, ghats, hospitals, and parking on one live map.</p>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="mp-how-icon">🚨</div>
+          <h6 class="mt-2">Stay Informed</h6>
+          <p class="small text-muted">Real-time traffic advisories, crowd density, and incident alerts.</p>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="mp-how-icon">🔎</div>
+          <h6 class="mt-2">Reunite &amp; Report</h6>
+          <p class="small text-muted">Report or search Lost &amp; Found cases quickly.</p>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="mp-how-icon">📞</div>
+          <h6 class="mt-2">Get Help Fast</h6>
+          <p class="small text-muted">Emergency helplines and the nearest facility, one tap away.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mb-5 text-center">
+    <div class="mp-form-card mx-auto" style="max-width: 600px;">
+      <h5 class="mb-2">Have questions?</h5>
+      <p class="text-muted mb-3">Check our FAQs, or use the chat helper in the corner.</p>
+      <a href="/faq" class="btn mp-btn-primary">Browse FAQs</a>
+    </div>
+  </section>
 </main>
 
 <%- include('partials/footer') %>

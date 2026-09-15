@@ -902,3 +902,39 @@ a:hover { color: var(--mp-saffron-dark); }
 .mp-footer-inline-link {
   color: var(--mp-saffron);
 }
+
+/* ---------- Homepage stats bar ---------- */
+.mp-stats-bar {
+  background: linear-gradient(90deg, var(--mp-maroon) 0%, var(--mp-maroon-deep) 100%);
+  padding: 2rem 0;
+}
+
+.mp-stat-num-lg {
+  font-family: var(--mp-heading-font);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: var(--mp-saffron);
+}
+
+.mp-stat-label-lg {
+  color: var(--mp-cream);
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* ---------- How Mahapath Helps ---------- */
+.mp-how-section {
+  background: var(--mp-cream-2);
+}
+
+.mp-how-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 12px rgba(107, 15, 26, 0.1);
+}
