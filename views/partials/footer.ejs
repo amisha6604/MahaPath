@@ -4,9 +4,52 @@
       <path d="M0 12 Q 15 0, 30 12 T 60 12 T 90 12 T 120 12 T 150 12 T 180 12 T 210 12 T 240 12 T 270 12 T 300 12 T 330 12 T 360 12 T 390 12 T 420 12 T 450 12 T 480 12 T 510 12 T 540 12 T 570 12 T 600 12" />
     </svg>
   </div>
-  <div class="container py-4 text-center">
-    <p class="mb-1 mp-footer-title">🚩 Mahapath</p>
-    <p class="mb-0 mp-footer-sub">Your spiritual path through the Mahakumbh, visualized and scheduled.</p>
-    <p class="mb-0 mp-footer-copy">&copy; <%= new Date().getFullYear() %> Mahapath. Built for Mahakumbh, Prayagraj.</p>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <p class="mp-footer-title mb-2">🚩 Mahapath</p>
+        <p class="mp-footer-sub">Your spiritual path through the Mahakumbh, visualized and scheduled. An independent companion project — not an official government site.</p>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <h6 class="mp-footer-heading">Explore</h6>
+        <ul class="list-unstyled mp-footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/map">Map</a></li>
+          <li><a href="/schedule">Schedule</a></li>
+          <li><a href="/nearby">Nearby Places</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <h6 class="mp-footer-heading">Resources</h6>
+        <ul class="list-unstyled mp-footer-links">
+          <li><a href="/facilities">Facilities</a></li>
+          <li><a href="/lost-found">Lost &amp; Found</a></li>
+          <li><a href="/helplines">Helplines</a></li>
+          <li><a href="/traffic">Traffic Advisories</a></li>
+          <li><a href="/incidents">Incident Reports</a></li>
+          <li><a href="/crowd">Crowd Density</a></li>
+          <li><a href="/nearest">Find Nearest Facility</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <h6 class="mp-footer-heading">Info</h6>
+        <ul class="list-unstyled mp-footer-links">
+          <li><a href="/about-mahakumbh">Know About Mahakumbh</a></li>
+          <li><a href="/faq">FAQs</a></li>
+          <li><a href="/login">Organizer / Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="mp-footer-hr">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <p class="mb-0 mp-footer-copy">&copy; <%= new Date().getFullYear() %> Mahapath. Built for Mahakumbh, Prayagraj.</p>
+      <p class="mb-0 mp-footer-copy">For emergencies, always use official helplines — see <a href="/helplines" class="mp-footer-inline-link">Helplines</a>.</p>
+    </div>
   </div>
 </footer>
