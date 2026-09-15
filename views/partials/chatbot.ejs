@@ -1,0 +1,70 @@
+<div id="mpChatbot" class="mp-chatbot">
+  <button id="mpChatToggle" class="mp-chat-toggle" aria-label="Open help chat">💬</button>
+
+  <div id="mpChatPanel" class="mp-chat-panel d-none">
+    <div class="mp-chat-header">
+      <span>🚩 Mahapath Help</span>
+      <button id="mpChatClose" aria-label="Close chat">&times;</button>
+    </div>
+    <div id="mpChatMessages" class="mp-chat-messages">
+      <div class="mp-chat-msg mp-chat-bot">
+        Namaste! Ask me about events, facilities, Lost &amp; Found, traffic, or crowd density. For real emergencies, please use the Helplines page directly.
+      </div>
+    </div>
+    <form id="mpChatForm" class="mp-chat-input-row">
+      <input type="text" id="mpChatInput" class="form-control form-control-sm" placeholder="Type a question..." autocomplete="off">
+      <button type="submit" class="btn btn-sm mp-btn-primary">Send</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const toggle = document.getElementById('mpChatToggle');
+    const panel = document.getElementById('mpChatPanel');
+    const closeBtn = document.getElementById('mpChatClose');
+    const messages = document.getElementById('mpChatMessages');
+    const form = document.getElementById('mpChatForm');
+    const input = document.getElementById('mpChatInput');
+
+    toggle.addEventListener('click', () => panel.classList.toggle('d-none'));
+    closeBtn.addEventListener('click', () => panel.classList.add('d-none'));
+
+    function addMessage(text, sender, link, linkText) {
+      const div = document.createElement('div');
+      div.className = `mp-chat-msg mp-chat-${sender}`;
+      div.textContent = text;
+      if (link) {
+        const a = document.createElement('a');
+        a.href = link;
+        a.textContent = linkText || 'Open';
+        a.className = 'mp-chat-link';
+        div.appendChild(document.createElement('br'));
+        div.appendChild(a);
+      }
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, 'user');
+      input.value = '';
+
+      try {
+        const res = await fetch('/api/chatbot/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        addMessage(data.reply, 'bot', data.link, data.linkText);
+      } catch (err) {
+        addMessage('Sorry, something went wrong. Try again or check the FAQ page.', 'bot', '/faq', 'View FAQs');
+      }
+    });
+  })();
+</script>

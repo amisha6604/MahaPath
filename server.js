@@ -50,6 +50,7 @@ const nearbyRoutes = require('./routes/nearby');
 const aboutRoutes = require('./routes/about');
 const nearestRoutes = require('./routes/nearest');
 const faqRoutes = require('./routes/faq');
+const chatbotRoutes = require('./routes/chatbot');
 
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
@@ -64,6 +65,7 @@ app.use('/nearby', nearbyRoutes);
 app.use('/about-mahakumbh', aboutRoutes);
 app.use('/nearest', nearestRoutes);
 app.use('/faq', faqRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // 404 handler — must come after all real routes
 app.use((req, res) => {
