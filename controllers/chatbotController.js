@@ -1,4 +1,4 @@
-const { getFaqs } = require('./faqController');
+const { getFaqsFlat } = require('./faqController');
 
 // Quick intents checked before falling back to FAQ keyword matching —
 // these catch common short queries that wouldn't score well against FAQ text.
@@ -21,44 +21,47 @@ function scoreMatch(userWords, text) {
   return score;
 }
 
-exports.reply = (req, res) => {
-  const message = (req.body.message || '').trim();
-  if (!message) {
-    return res.json({ reply: 'Ask me something about events, facilities, Lost & Found, traffic, or crowd density!' });
-  }
-
-  const lower = message.toLowerCase();
-  const userWords = lower.split(/\W+/);
-
-  // 1. Check quick intents first
-  for (const intent of QUICK_INTENTS) {
-    if (intent.keywords.some(k => lower.includes(k))) {
-      return res.json({ reply: intent.reply, link: intent.link, linkText: intent.linkText });
+exports.reply = async (req, res) => {
+  try {
+    const message = (req.body.message || '').trim();
+    if (!message) {
+      return res.json({ reply: 'Ask me something about events, facilities, Lost & Found, traffic, or crowd density!' });
     }
-  }
 
-  // 2. Fall back to FAQ keyword matching
-  const faqs = getFaqs();
-  let best = null;
-  let bestScore = 0;
+    const lower = message.toLowerCase();
+    const userWords = lower.split(/\W+/);
 
-  faqs.forEach(group => {
-    group.items.forEach(item => {
-      const score = scoreMatch(userWords, item.q + ' ' + item.a);
+    // 1. Check quick intents first
+    for (const intent of QUICK_INTENTS) {
+      if (intent.keywords.some(k => lower.includes(k))) {
+        return res.json({ reply: intent.reply, link: intent.link, linkText: intent.linkText });
+      }
+    }
+
+    // 2. Fall back to FAQ keyword matching (now backed by the real Faq collection)
+    const faqs = await getFaqsFlat();
+    let best = null;
+    let bestScore = 0;
+
+    faqs.forEach(faq => {
+      const score = scoreMatch(userWords, faq.question + ' ' + faq.answer);
       if (score > bestScore) {
         bestScore = score;
-        best = item;
+        best = faq;
       }
     });
-  });
 
-  if (best && bestScore >= 2) {
-    return res.json({ reply: best.a });
+    if (best && bestScore >= 2) {
+      return res.json({ reply: best.answer });
+    }
+
+    return res.json({
+      reply: "I'm not sure about that one — try browsing our FAQs, or check Helplines if this is urgent.",
+      link: '/faq',
+      linkText: 'View FAQs'
+    });
+  } catch (err) {
+    console.error('❌ Chatbot reply error:', err);
+    res.json({ reply: 'Something went wrong on my end — try browsing the FAQ page instead.', link: '/faq', linkText: 'View FAQs' });
   }
-
-  return res.json({
-    reply: "I'm not sure about that one — try browsing our FAQs, or check Helplines if this is urgent.",
-    link: '/faq',
-    linkText: 'View FAQs'
-  });
 };

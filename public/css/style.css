@@ -378,6 +378,70 @@ a:hover { color: var(--mp-saffron-dark); }
   color: #fff;
 }
 
+.mp-notif-more {
+  font-weight: 400;
+  opacity: 0.85;
+  font-size: 0.85em;
+}
+
+/* ---------- Homepage Active Safety Alerts section ---------- */
+.mp-alerts-section {
+  background: #fff8f0;
+  border-top: 1px solid var(--mp-cream-2);
+  border-bottom: 1px solid var(--mp-cream-2);
+}
+
+.mp-alerts-heading {
+  color: #b71c1c;
+  font-family: var(--mp-heading-font);
+  font-size: 1.4rem;
+}
+
+.mp-alert-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #fff;
+  border-left: 4px solid #b71c1c;
+  text-decoration: none;
+  color: var(--mp-text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  height: 100%;
+}
+
+.mp-alert-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  color: var(--mp-text);
+}
+
+.mp-alert-badge {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.mp-alert-text {
+  font-size: 0.88rem;
+}
+
+.mp-alert-critical { border-left-color: #b71c1c; }
+.mp-alert-critical .mp-alert-badge { background: #b71c1c; }
+
+.mp-alert-high { border-left-color: #e65100; }
+.mp-alert-high .mp-alert-badge { background: #e65100; }
+
+.mp-alert-medium { border-left-color: #f9a825; }
+.mp-alert-medium .mp-alert-badge { background: #f9a825; color: #3A2418; }
+
+.mp-alert-low { border-left-color: #689f38; }
+.mp-alert-low .mp-alert-badge { background: #689f38; }
+
 .mp-brand {
   font-family: var(--mp-heading-font);
   font-size: 1.5rem;

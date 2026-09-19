@@ -44,6 +44,24 @@
     </div>
   </section>
 
+  <% if (typeof siteNotifications !== 'undefined' && siteNotifications.length > 0) { %>
+    <section class="mp-alerts-section py-4">
+      <div class="container">
+        <h2 class="mp-alerts-heading mb-3">⚠️ Active Safety Alerts</h2>
+        <div class="row g-3">
+          <% siteNotifications.forEach(n => { %>
+            <div class="col-12 col-md-6 col-lg-4">
+              <a href="<%= n.link %>" class="mp-alert-card mp-alert-<%= n.severity.toLowerCase() %>">
+                <span class="mp-alert-badge"><%= n.severity %></span>
+                <span class="mp-alert-text"><%= n.text %></span>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
   <section class="mp-about-teaser">
     <div class="container">
       <div class="row align-items-center g-4">
@@ -201,11 +219,28 @@
     </div>
   </section>
 
-  <section class="container mb-5 text-center">
-    <div class="mp-form-card mx-auto" style="max-width: 600px;">
-      <h5 class="mb-2">Have questions?</h5>
-      <p class="text-muted mb-3">Check our FAQs, or use the chat helper in the corner.</p>
-      <a href="/faq" class="btn mp-btn-primary">Browse FAQs</a>
+  <section class="container mb-5">
+    <h2 class="mp-section-title text-center mx-auto mb-4" style="max-width: 500px;">Top Questions</h2>
+
+    <% if (topFaqs && topFaqs.length > 0) { %>
+      <div class="accordion mb-3" id="homeFaqAccordion" style="max-width: 760px; margin: 0 auto;">
+        <% topFaqs.forEach((faq, i) => { %>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#homeFaq-<%= i %>">
+                <%= faq.question %>
+              </button>
+            </h2>
+            <div id="homeFaq-<%= i %>" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+              <div class="accordion-body"><%= faq.answer %></div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <div class="text-center mt-3">
+      <a href="/faq" class="btn mp-btn-primary">See All FAQs &rarr;</a>
     </div>
   </section>
 </main>

@@ -5,32 +5,36 @@
     (function () {
       const notifications = <%- JSON.stringify(siteNotifications) %>;
       const wrap = document.getElementById('mpNotifications');
-      const dismissedKey = 'mp-dismissed-notifications';
+      const dismissedKey = 'mp-dismissed-banner';
 
-      let dismissed = [];
+      let dismissedId = null;
       try {
-        dismissed = JSON.parse(sessionStorage.getItem(dismissedKey) || '[]');
+        dismissedId = sessionStorage.getItem(dismissedKey);
       } catch (e) {
-        dismissed = [];
+        dismissedId = null;
       }
 
-      const visible = notifications.filter(n => !dismissed.includes(n.id));
-      if (visible.length === 0) return;
+      // Only the single most urgent item is shown as a top banner — the full list
+      // lives in the "Active Safety Alerts" section on the homepage instead of
+      // stacking many intrusive red bars on every page.
+      const top = notifications[0];
+      if (!top || top.id === dismissedId) return;
 
-      visible.forEach(n => {
-        const bar = document.createElement('div');
-        bar.className = `mp-notif mp-notif-${n.severity.toLowerCase()}`;
-        bar.innerHTML = `
-          <a href="${n.link}" class="mp-notif-text">${n.text}</a>
-          <button type="button" class="mp-notif-close" aria-label="Dismiss">&times;</button>
-        `;
-        bar.querySelector('.mp-notif-close').addEventListener('click', () => {
-          dismissed.push(n.id);
-          try { sessionStorage.setItem(dismissedKey, JSON.stringify(dismissed)); } catch (e) {}
-          bar.remove();
-        });
-        wrap.appendChild(bar);
+      const extraCount = notifications.length - 1;
+
+      const bar = document.createElement('div');
+      bar.className = `mp-notif mp-notif-${top.severity.toLowerCase()}`;
+      bar.innerHTML = `
+        <a href="${top.link}" class="mp-notif-text">
+          ${top.text}${extraCount > 0 ? ` <span class="mp-notif-more">+${extraCount} more active alert${extraCount > 1 ? 's' : ''}</span>` : ''}
+        </a>
+        <button type="button" class="mp-notif-close" aria-label="Dismiss">&times;</button>
+      `;
+      bar.querySelector('.mp-notif-close').addEventListener('click', () => {
+        try { sessionStorage.setItem(dismissedKey, top.id); } catch (e) {}
+        bar.remove();
       });
+      wrap.appendChild(bar);
     })();
   </script>
 <% } %>

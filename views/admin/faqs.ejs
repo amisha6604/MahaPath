@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Manage FAQs</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+      <h2 class="mp-section-title">❓ Manage FAQs</h2>
+      <div class="d-flex gap-2">
+        <a href="/admin" class="btn mp-btn-outline btn-sm" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">&larr; Dashboard</a>
+        <a href="/admin/faqs/add" class="btn mp-btn-primary btn-sm">+ Add FAQ</a>
+      </div>
+    </div>
+
+    <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+    <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+    <div class="table-responsive mp-form-card">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Published</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% faqs.forEach(faq => { %>
+            <tr>
+              <td><%= faq.question %></td>
+              <td><span class="mp-badge"><%= faq.category %></span></td>
+              <td><%= faq.priority %></td>
+              <td><%= faq.isPublished ? '✅' : '⛔' %></td>
+              <td class="d-flex gap-2">
+                <a href="/admin/faqs/edit/<%= faq._id %>" class="btn btn-sm mp-btn-warning">Edit</a>
+                <form action="/admin/faqs/delete/<%= faq._id %>" method="POST" onsubmit="return confirm('Delete this FAQ?');">
+                  <button type="submit" class="btn btn-sm mp-btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-muted small mt-2">Priority 1-10 shows on the homepage "Top Questions" section. Lower number = higher up.</p>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>

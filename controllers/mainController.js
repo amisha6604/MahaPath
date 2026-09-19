@@ -5,6 +5,7 @@ const NearbyPlace = require('../models/nearbyPlace');
 const locationCoords = require('../utils/locationCoords');
 const { currentByFacility } = require('./crowdController');
 const { getForHomepage } = require('./nearbyController');
+const { getForHomepage: getTopFaqs } = require('./faqController');
 
 // Helper: build a Mongoose filter from query params shared by home/schedule/map
 function buildFilter(query) {
@@ -39,18 +40,20 @@ exports.home = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [events, nearbyPlaces, totalEvents, totalFacilities, totalHelplines, totalNearby] = await Promise.all([
+    const [events, nearbyPlaces, totalEvents, totalFacilities, totalHelplines, totalNearby, topFaqs] = await Promise.all([
       Event.find({ date: { $gte: today } }).sort({ date: 1 }).limit(6),
       getForHomepage(),
       Event.countDocuments(),
       Facility.countDocuments(),
       Helpline.countDocuments(),
-      NearbyPlace.countDocuments()
+      NearbyPlace.countDocuments(),
+      getTopFaqs(6)
     ]);
 
     res.render('home', {
       events,
       nearbyPlaces,
+      topFaqs,
       stats: { totalEvents, totalFacilities, totalHelplines, totalNearby }
     });
   } catch (err) {

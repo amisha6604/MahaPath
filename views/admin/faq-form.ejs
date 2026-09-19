@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | <%= faq ? 'Edit' : 'Add' %> FAQ</title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container py-5" style="max-width: 640px;">
+    <div class="mp-form-card">
+      <h2 class="mb-4"><%= faq ? 'Edit' : 'Add' %> FAQ</h2>
+
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+      <form action="<%= faq ? `/admin/faqs/edit/${faq._id}` : '/admin/faqs/add' %>" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Question</label>
+          <input type="text" class="form-control" name="question" required
+                 value="<%= faq ? faq.question : (values.question || '') %>">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Answer</label>
+          <textarea class="form-control" name="answer" rows="4" required><%= faq ? faq.answer : (values.answer || '') %></textarea>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-8">
+            <label class="form-label">Category</label>
+            <input type="text" class="form-control" name="category" required
+                   value="<%= faq ? faq.category : (values.category || '') %>"
+                   placeholder="e.g. Safety & Emergency">
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Priority</label>
+            <input type="number" class="form-control" name="priority"
+                   value="<%= faq ? faq.priority : (values.priority || 100) %>">
+            <div class="form-text">1-10 shows on homepage.</div>
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="isPublished" id="isPublished"
+                 <%= (faq ? faq.isPublished : true) ? 'checked' : '' %>>
+          <label class="form-check-label" for="isPublished">Published (visible on the site)</label>
+        </div>
+
+        <button type="submit" class="btn mp-btn-primary mt-2"><%= faq ? 'Update' : 'Add' %> FAQ</button>
+        <a href="/admin/faqs" class="btn mp-btn-outline mt-2" style="color:var(--mp-maroon); border-color:var(--mp-maroon);">Cancel</a>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
