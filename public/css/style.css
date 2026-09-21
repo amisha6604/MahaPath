@@ -9,8 +9,8 @@
   --mp-cream: #FFF8ED;
   --mp-cream-2: #FFF1DC;
   --mp-text: #3A2418;
-  --mp-heading-font: 'Marcellus', serif;
-  --mp-body-font: 'Philosopher', serif;
+  --mp-heading-font: 'Cinzel', serif;
+  --mp-body-font: 'Mukta', sans-serif;
 }
 
 * { box-sizing: border-box; }
