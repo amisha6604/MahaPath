@@ -1,8 +1,31 @@
 # Adding Real Images to Mahapath
 
-I didn't hardcode photos scraped from random websites into the codebase — most are copyrighted,
-and photos of identifiable people at a religious gathering carry privacy considerations even when
-licensed. Here's how to add real images properly, in about 10-15 minutes:
+## Images currently wired into the site (as of this commit)
+
+Two real, CC-licensed photos are now live:
+
+| Location | File | License | Source page |
+|---|---|---|---|
+| Homepage hero background | `Triveni_Sangam.JPG` | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Triveni_Sangam.JPG |
+| "Know About Mahakumbh" page hero | `Prayagraj_sangam.jpg` | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Prayagraj_sangam.jpg |
+
+Both are loaded via Wikimedia's official `Special:FilePath` redirect (a stable, documented URL
+pattern designed for exactly this kind of reuse — it always resolves to the current version of
+the file without needing to know Wikimedia's internal hash-based storage path). Attribution
+captions linking back to each source page are included on-page, since CC BY-SA legally requires
+attribution.
+
+**Important — please verify visually yourself before treating this as final:** the research tool
+used to confirm these licenses could read Wikimedia's *text* (via search results and category
+listings, which is how the license and usage info above was confirmed — `Triveni_Sangam.JPG` is
+independently confirmed to be used on English Wikipedia's own "Prayagraj" and "Triveni Sangam"
+articles, which is strong evidence of legitimate standing), but could not directly load and
+visually inspect the *image itself* due to a domain restriction in that environment. Open both
+URLs in your own browser once and confirm they show what you'd expect (a river confluence
+scene) before considering this final — if anything looks wrong, tell me and I'll source
+alternatives.
+
+## Adding more images yourself
 
 ## Legitimate free sources
 

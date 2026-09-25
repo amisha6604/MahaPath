@@ -295,7 +295,10 @@ a:hover { color: var(--mp-saffron-dark); }
 
 /* ---------- About Mahakumbh page ---------- */
 .mp-about-hero {
-  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-maroon-deep) 100%);
+  background: linear-gradient(rgba(74, 10, 18, 0.78), rgba(74, 10, 18, 0.78)), url('https://commons.wikimedia.org/wiki/Special:FilePath/Prayagraj_sangam.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
 }
 
 .mp-about-nav {
@@ -500,7 +503,7 @@ a:hover { color: var(--mp-saffron-dark); }
 .hero-section {
   position: relative;
   min-height: 62vh;
-  background: linear-gradient(rgba(74, 10, 18, 0.72), rgba(107, 15, 26, 0.55)), url('/images/mahakumbh-bg.jpg');
+  background: linear-gradient(rgba(74, 10, 18, 0.72), rgba(107, 15, 26, 0.55)), url('https://commons.wikimedia.org/wiki/Special:FilePath/Triveni_Sangam.JPG');
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -518,6 +521,23 @@ a:hover { color: var(--mp-saffron-dark); }
     transparent 14px
   );
   pointer-events: none;
+}
+
+.mp-photo-credit {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  z-index: 2;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.mp-photo-credit:hover {
+  color: #fff;
 }
 
 .hero-section h1 {
