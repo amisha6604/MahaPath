@@ -6,6 +6,7 @@ const locationCoords = require('../utils/locationCoords');
 const { currentByFacility } = require('./crowdController');
 const { getForHomepage } = require('./nearbyController');
 const { getForHomepage: getTopFaqs } = require('./faqController');
+const { firstError } = require('../middleware/validators');
 
 // Helper: build a Mongoose filter from query params shared by home/schedule/map
 function buildFilter(query) {
@@ -146,16 +147,17 @@ exports.addForm = (req, res) => {
 // Handle form submission and add the event to DB
 exports.addEvent = async (req, res) => {
   try {
-    const { title, location, category, date, time, description } = req.body;
-
-    if (!title || !location || !date || !time) {
+    const validationError = firstError(req);
+    if (validationError) {
       return res.status(400).render('add', {
         categories: Event.CATEGORIES,
         locations: Object.keys(locationCoords),
-        error: 'Title, location, date, and time are required.',
+        error: validationError,
         values: req.body
       });
     }
+
+    const { title, location, category, date, time, description } = req.body;
 
     const newEvent = new Event({
       title,
@@ -212,17 +214,18 @@ exports.editForm = async (req, res) => {
 // Handle update submission (organizers only)
 exports.updateEvent = async (req, res) => {
   try {
-    const { title, location, category, date, time, description } = req.body;
-
-    if (!title || !location || !date || !time) {
+    const validationError = firstError(req);
+    if (validationError) {
       const event = await Event.findById(req.params.id);
       return res.status(400).render('edit', {
         event: { ...event.toObject(), ...req.body, _id: req.params.id },
         categories: Event.CATEGORIES,
         locations: Object.keys(locationCoords),
-        error: 'Title, location, date, and time are required.'
+        error: validationError
       });
     }
+
+    const { title, location, category, date, time, description } = req.body;
 
     await Event.findByIdAndUpdate(req.params.id, { title, location, category, date, time, description });
     res.redirect('/schedule');

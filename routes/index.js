@@ -3,6 +3,7 @@ const router = express.Router();
 const mainController = require('../controllers/mainController');
 const profileController = require('../controllers/profileController');
 const { requireAuth, requireRole } = require('../middleware/auth');
+const { eventValidation } = require('../middleware/validators');
 
 const canManageEvents = [requireAuth, requireRole(['organizer', 'admin'])];
 
@@ -13,10 +14,10 @@ router.get('/schedule', mainController.schedule);
 
 // Organizer/admin-only routes — visitors are logged in but can't manage events
 router.get('/add', ...canManageEvents, mainController.addForm);
-router.post('/add', ...canManageEvents, mainController.addEvent);
+router.post('/add', ...canManageEvents, eventValidation, mainController.addEvent);
 
 router.get('/edit/:id', ...canManageEvents, mainController.editForm);
-router.post('/edit/:id', ...canManageEvents, mainController.updateEvent);
+router.post('/edit/:id', ...canManageEvents, eventValidation, mainController.updateEvent);
 
 router.post('/delete/:id', ...canManageEvents, mainController.deleteEvent);
 

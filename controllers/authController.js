@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const { firstError } = require('../middleware/validators');
 
 exports.registerForm = (req, res) => {
   res.render('register', { error: null });
@@ -7,17 +8,12 @@ exports.registerForm = (req, res) => {
 
 exports.register = async (req, res) => {
   try {
-    const { username, password, confirmPassword } = req.body;
+    const validationError = firstError(req);
+    if (validationError) {
+      return res.render('register', { error: validationError });
+    }
 
-    if (!username || !password) {
-      return res.render('register', { error: 'Username and password are required.' });
-    }
-    if (password !== confirmPassword) {
-      return res.render('register', { error: 'Passwords do not match.' });
-    }
-    if (password.length < 6) {
-      return res.render('register', { error: 'Password must be at least 6 characters.' });
-    }
+    const { username, password } = req.body;
 
     const existing = await User.findOne({ username: username.toLowerCase().trim() });
     if (existing) {
@@ -41,8 +37,14 @@ exports.loginForm = (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
     const next = req.body.next || '/';
+
+    const validationError = firstError(req);
+    if (validationError) {
+      return res.render('login', { error: validationError, next });
+    }
+
+    const { username, password } = req.body;
 
     const user = await User.findOne({ username: (username || '').toLowerCase().trim() });
     if (!user) {

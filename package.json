@@ -22,7 +22,9 @@
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-rate-limit": "^7.4.1",
     "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
     "leaflet": "^1.9.4",
     "mongoose": "^8.16.0"
   },
