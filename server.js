@@ -36,6 +36,20 @@ app.use(attachUser);
 const { attachNotifications } = require('./middleware/notifications');
 app.use(attachNotifications);
 
+// CSRF protection — generates/exposes a per-session token to every view (auto-injected
+// into forms client-side, see views/partials/head.ejs), and verifies it on every
+// state-changing request. The chatbot's JSON API is exempted: it's called via fetch(),
+// not a <form>, and performs no state-changing side effects (it only reads FAQs and
+// replies), so there's nothing here for CSRF to actually protect.
+const { attachCsrfToken, verifyCsrfToken } = require('./middleware/csrf');
+app.use(attachCsrfToken);
+app.use((req, res, next) => {
+  if (req.method === 'POST' && !req.path.startsWith('/api/chatbot')) {
+    return verifyCsrfToken(req, res, next);
+  }
+  next();
+});
+
 // Routes
 const mainRoutes = require('./routes/index');
 const authRoutes = require('./routes/auth');
