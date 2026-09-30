@@ -1022,3 +1022,25 @@ a:hover { color: var(--mp-saffron-dark); }
   font-size: 1.8rem;
   box-shadow: 0 4px 12px rgba(107, 15, 26, 0.1);
 }
+
+/* ---------- Event detail page ---------- */
+.mp-back-link {
+  color: var(--mp-maroon);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.mp-back-link:hover {
+  color: var(--mp-saffron-dark);
+}
+
+.mp-card-title-link {
+  color: var(--mp-maroon);
+  text-decoration: none;
+}
+
+.mp-card-title-link:hover {
+  color: var(--mp-saffron-dark);
+  text-decoration: underline;
+}

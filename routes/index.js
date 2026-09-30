@@ -11,6 +11,7 @@ const canManageEvents = [requireAuth, requireRole(['organizer', 'admin'])];
 router.get('/', mainController.home);
 router.get('/map', mainController.map);
 router.get('/schedule', mainController.schedule);
+router.get('/event/:id', mainController.eventDetail);
 
 // Organizer/admin-only routes — visitors are logged in but can't manage events
 router.get('/add', ...canManageEvents, mainController.addForm);

@@ -148,7 +148,7 @@
           <div class="card mp-card">
             <div class="card-body">
               <span class="mp-badge mb-2 d-inline-block"><%= event.category %></span>
-              <h5 class="card-title"><%= event.title %></h5>
+              <h5 class="card-title"><a href="/event/<%= event._id %>" class="mp-card-title-link"><%= event.title %></a></h5>
               <p class="card-text mb-1">📍 <%= event.location %> &middot; 🕔 <%= event.time %></p>
               <p class="card-text text-muted">
                 <%= event.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>

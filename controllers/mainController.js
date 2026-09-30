@@ -63,6 +63,23 @@ exports.home = async (req, res) => {
   }
 };
 
+// Event detail page — shows full info plus a mini-map if the location has known coordinates
+exports.eventDetail = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).render('error', { message: 'Event not found.' });
+    }
+
+    const coords = locationCoords[event.location] || null;
+
+    res.render('event-detail', { event, coords });
+  } catch (err) {
+    console.error('❌ Event detail error:', err);
+    res.status(500).render('error', { message: 'Could not load that event.' });
+  }
+};
+
 // Map: pulls REAL events from MongoDB and geocodes them via locationCoords.
 // Only events whose `location` has a known lat/lng entry can be plotted.
 exports.map = async (req, res) => {

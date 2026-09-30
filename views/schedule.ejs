@@ -60,7 +60,7 @@
             <div class="card mp-card">
               <div class="card-body">
                 <span class="mp-badge mb-2 d-inline-block"><%= event.category %></span>
-                <h5 class="card-title"><%= event.title %></h5>
+                <h5 class="card-title"><a href="/event/<%= event._id %>" class="mp-card-title-link"><%= event.title %></a></h5>
                 <% if (event.description) { %>
                   <p class="card-text small text-muted"><%= event.description %></p>
                 <% } %>
