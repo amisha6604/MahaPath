@@ -1044,3 +1044,59 @@ a:hover { color: var(--mp-saffron-dark); }
   color: var(--mp-saffron-dark);
   text-decoration: underline;
 }
+
+/* ---------- Bathing dates callout ---------- */
+.mp-date-badge {
+  background: #fff;
+  border: 2px solid var(--mp-cream-2);
+  border-radius: 14px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  height: 100%;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mp-date-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(107, 15, 26, 0.1);
+}
+
+.mp-date-badge-major {
+  border-color: var(--mp-saffron);
+  background: linear-gradient(180deg, #fff 0%, var(--mp-cream-2) 100%);
+}
+
+.mp-date-badge-day {
+  font-family: var(--mp-heading-font);
+  font-size: 2rem;
+  color: var(--mp-maroon);
+  line-height: 1;
+}
+
+.mp-date-badge-month {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mp-saffron-dark);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.mp-date-badge-occasion {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mp-text);
+}
+
+.mp-date-badge-tag {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--mp-saffron);
+  color: var(--mp-maroon-deep);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}

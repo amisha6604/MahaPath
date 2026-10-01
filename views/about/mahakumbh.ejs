@@ -27,6 +27,7 @@
         <div class="mp-about-nav sticky-top">
           <a href="#origins" class="mp-about-nav-link">Origins &amp; Mythology</a>
           <a href="#cycle" class="mp-about-nav-link">The Kumbh Cycle</a>
+          <a href="#bathing-dates" class="mp-about-nav-link">Bathing Dates</a>
           <a href="#shahi-snan" class="mp-about-nav-link">Shahi Snan</a>
           <a href="#akharas" class="mp-about-nav-link">Akharas &amp; Naga Sadhus</a>
           <a href="#significance" class="mp-about-nav-link">Significance &amp; Beliefs</a>
@@ -63,6 +64,35 @@
             <li><strong>Maha Kumbh</strong> — the rarest and most significant, occurring once every 144 years (after 12 Purna Kumbhs) specifically at Prayagraj, at the sacred confluence — or Sangam — of the Ganga, Yamuna, and the mythical, invisible Saraswati river.</li>
           </ul>
           <p class="text-muted small">Mahapath is built around the Mahakumbh at Prayagraj — the most significant occurrence in this cycle.</p>
+        </section>
+
+        <section id="bathing-dates" class="mp-form-card mb-4">
+          <h3 class="mb-1">📅 Key Bathing Dates (2025)</h3>
+          <p class="text-muted small mb-4">Historical reference — the major Amrit Snan (sacred bathing) dates during Mahakumbh 2025.</p>
+
+          <%
+            const bathingDates = [
+              { day: '13', month: 'Jan', occasion: 'Paush Purnima', isMajor: false },
+              { day: '14', month: 'Jan', occasion: 'Makar Sankranti', isMajor: true },
+              { day: '29', month: 'Jan', occasion: 'Mauni Amavasya', isMajor: true },
+              { day: '3', month: 'Feb', occasion: 'Basant Panchami', isMajor: true },
+              { day: '12', month: 'Feb', occasion: 'Maghi Purnima', isMajor: false },
+              { day: '26', month: 'Feb', occasion: 'Maha Shivratri', isMajor: true }
+            ];
+          %>
+
+          <div class="row g-3">
+            <% bathingDates.forEach(d => { %>
+              <div class="col-6 col-md-4 col-lg-2">
+                <div class="mp-date-badge <%= d.isMajor ? 'mp-date-badge-major' : '' %>">
+                  <div class="mp-date-badge-day"><%= d.day %></div>
+                  <div class="mp-date-badge-month"><%= d.month %></div>
+                  <div class="mp-date-badge-occasion"><%= d.occasion %></div>
+                  <% if (d.isMajor) { %><span class="mp-date-badge-tag">Amrit Snan</span><% } %>
+                </div>
+              </div>
+            <% }) %>
+          </div>
         </section>
 
         <section id="shahi-snan" class="mp-form-card mb-4">
