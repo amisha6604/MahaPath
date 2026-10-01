@@ -5,6 +5,8 @@ const Helpline = require('../models/helpline');
 const TrafficDiversion = require('../models/trafficDiversion');
 const Incident = require('../models/incident');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 // Helper: turns [{ _id: 'X', count: N }, ...] from an aggregate into a plain { X: N } object
 function toCountMap(aggResult) {
@@ -116,5 +118,33 @@ exports.updateUserRole = async (req, res) => {
   } catch (err) {
     console.error('❌ Admin role update error:', err);
     res.status(500).render('error', { message: 'Could not update that user\'s role.' });
+  }
+};
+
+// Admin-initiated password reset. There's no email service wired up yet (see
+// SYSTEM_DESIGN.md roadmap), so this generates a random temporary password, shown
+// to the admin ONCE, who then relays it to the user out-of-band (chat, in person,
+// etc.) — the user should change it immediately via their own /profile page.
+exports.resetUserPassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      const users = await User.find().sort({ createdAt: -1 });
+      return res.status(404).render('admin/users', { users, error: 'User not found.', success: null });
+    }
+
+    const tempPassword = crypto.randomBytes(6).toString('hex'); // 12-character one-time password
+    user.password = await bcrypt.hash(tempPassword, 10);
+    await user.save();
+
+    const users = await User.find().sort({ createdAt: -1 });
+    res.render('admin/users', {
+      users,
+      error: null,
+      success: `Password reset for "${user.username}". Temporary password (shown once — relay it to them securely): ${tempPassword}`
+    });
+  } catch (err) {
+    console.error('❌ Admin password reset error:', err);
+    res.status(500).render('error', { message: "Could not reset that user's password." });
   }
 };

@@ -9,6 +9,7 @@ const adminOnly = [requireAuth, requireRole(['admin'])];
 router.get('/', ...adminOnly, adminController.dashboard);
 router.get('/users', ...adminOnly, adminController.listUsers);
 router.post('/users/:id/role', ...adminOnly, adminController.updateUserRole);
+router.post('/users/:id/reset-password', ...adminOnly, adminController.resetUserPassword);
 
 router.get('/faqs', ...adminOnly, faqController.adminList);
 router.get('/faqs/add', ...adminOnly, faqController.addForm);

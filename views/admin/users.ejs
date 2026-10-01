@@ -26,6 +26,7 @@
             <th>Current Role</th>
             <th>Joined</th>
             <th>Change Role</th>
+            <th>Password</th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +43,12 @@
                     <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>admin</option>
                   </select>
                   <button type="submit" class="btn btn-sm mp-btn-primary">Update</button>
+                </form>
+              </td>
+              <td>
+                <form action="/admin/users/<%= u._id %>/reset-password" method="POST"
+                      onsubmit="return confirm('Reset this user\'s password? A new temporary password will be generated and shown once.');">
+                  <button type="submit" class="btn btn-sm mp-btn-warning">Reset Password</button>
                 </form>
               </td>
             </tr>
