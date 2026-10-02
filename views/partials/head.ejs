@@ -1,5 +1,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Applies a saved text-size preference immediately, before CSS/layout, so there's
+  // no visible "flash" of default size before it corrects itself. Persisted per
+  // browser tab session via sessionStorage — see the button handlers further below.
+  (function () {
+    try {
+      const saved = sessionStorage.getItem('mp-font-scale');
+      if (saved) document.documentElement.style.fontSize = saved + '%';
+    } catch (e) {}
+  })();
+</script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="/images/trishul-icon.png" type="image/png">
@@ -20,5 +31,25 @@
         form.appendChild(input);
       }
     });
+
+    // Accessibility: text-size controls (A- / A / A+) in the navbar.
+    // Scales html { font-size }, which cascades to every rem-based size in both
+    // Bootstrap and our own CSS — no need to touch individual component styles.
+    function getScale() {
+      const current = document.documentElement.style.fontSize;
+      return current ? parseInt(current, 10) : 100;
+    }
+    function setScale(pct) {
+      pct = Math.min(130, Math.max(80, pct));
+      document.documentElement.style.fontSize = pct + '%';
+      try { sessionStorage.setItem('mp-font-scale', pct); } catch (e) {}
+    }
+
+    const decBtn = document.getElementById('mpFontDec');
+    const resetBtn = document.getElementById('mpFontReset');
+    const incBtn = document.getElementById('mpFontInc');
+    if (decBtn) decBtn.addEventListener('click', () => setScale(getScale() - 10));
+    if (resetBtn) resetBtn.addEventListener('click', () => setScale(100));
+    if (incBtn) incBtn.addEventListener('click', () => setScale(getScale() + 10));
   });
 </script>

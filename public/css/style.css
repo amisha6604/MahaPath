@@ -1100,3 +1100,28 @@ a:hover { color: var(--mp-saffron-dark); }
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
 }
+
+/* ---------- Accessibility text-size controls ---------- */
+.mp-font-controls {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  margin: 0.25rem 0.5rem;
+}
+
+.mp-font-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 248, 237, 0.4);
+  color: var(--mp-cream);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.mp-font-btn:hover {
+  background: rgba(255, 248, 237, 0.15);
+  border-color: var(--mp-saffron);
+}
