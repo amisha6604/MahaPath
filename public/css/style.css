@@ -1125,3 +1125,77 @@ a:hover { color: var(--mp-saffron-dark); }
   background: rgba(255, 248, 237, 0.15);
   border-color: var(--mp-saffron);
 }
+
+/* ---------- Themed feature pillars ---------- */
+.mp-pillar-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 4px 16px rgba(107, 15, 26, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mp-pillar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(107, 15, 26, 0.16);
+}
+
+.mp-pillar-media {
+  height: 110px;
+  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-saffron-dark) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mp-pillar-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.mp-pillar-body {
+  padding: 1.1rem;
+}
+
+.mp-pillar-body h5 {
+  font-family: var(--mp-heading-font);
+  color: var(--mp-maroon);
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.mp-pillar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--mp-text);
+}
+
+.mp-pillar-list li {
+  padding-left: 1.1rem;
+  position: relative;
+  margin-bottom: 0.3rem;
+}
+
+.mp-pillar-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--mp-saffron-dark);
+  font-weight: 700;
+}
+
+.mp-pillar-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--mp-maroon);
+  text-decoration: none;
+}
+
+.mp-pillar-link:hover {
+  color: var(--mp-saffron-dark);
+}

@@ -197,28 +197,59 @@
 
   <section class="mp-how-section py-5">
     <div class="container">
-      <h2 class="mp-section-title text-center mx-auto mb-5" style="max-width: 500px;">How Mahapath Helps You</h2>
+      <h2 class="mp-section-title text-center mx-auto mb-2" style="max-width: 500px;">How Mahapath Helps You</h2>
+      <p class="text-center text-muted mb-5">Four ways Mahapath makes your Mahakumbh visit easier</p>
+
+      <%
+        // imageUrl left empty intentionally — once real, properly-licensed photos are
+        // added here, each pillar's media area will use them automatically instead of
+        // the gradient+icon fallback. See IMAGES.md for how to source them.
+        const pillars = [
+          {
+            icon: '🛡️', title: 'Safe Mahapath',
+            tagline: 'Real-time safety, right when you need it.',
+            bullets: ['Severity-triaged incident reporting', 'Live traffic advisories', 'Crowd density map overlay'],
+            link: '/incidents', linkText: 'View Safety Alerts', imageUrl: ''
+          },
+          {
+            icon: '🧭', title: 'Easy Mahapath',
+            tagline: "Find your way, and find what's nearest.",
+            bullets: ['Interactive event & facility map', 'Geolocation-based nearest finder', '23 mapped Prayagraj locations'],
+            link: '/map', linkText: 'Open the Map', imageUrl: ''
+          },
+          {
+            icon: '📚', title: 'Informed Mahapath',
+            tagline: 'History, rituals, and answers in one place.',
+            bullets: ['Know About Mahakumbh', 'Curated FAQs', 'Nearby places worth visiting'],
+            link: '/about-mahakumbh', linkText: 'Learn More', imageUrl: ''
+          },
+          {
+            icon: '🤝', title: 'Community Mahapath',
+            tagline: 'Reunite, report, and stay connected.',
+            bullets: ['Lost & Found reporting', 'Full event schedule', 'Organizer-run facility listings'],
+            link: '/lost-found', linkText: 'Open Lost & Found', imageUrl: ''
+          }
+        ];
+      %>
+
       <div class="row g-4">
-        <div class="col-6 col-md-3 text-center">
-          <div class="mp-how-icon">🗺️</div>
-          <h6 class="mt-2">Find Your Way</h6>
-          <p class="small text-muted">See events, ghats, hospitals, and parking on one live map.</p>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-          <div class="mp-how-icon">🚨</div>
-          <h6 class="mt-2">Stay Informed</h6>
-          <p class="small text-muted">Real-time traffic advisories, crowd density, and incident alerts.</p>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-          <div class="mp-how-icon">🔎</div>
-          <h6 class="mt-2">Reunite &amp; Report</h6>
-          <p class="small text-muted">Report or search Lost &amp; Found cases quickly.</p>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-          <div class="mp-how-icon">📞</div>
-          <h6 class="mt-2">Get Help Fast</h6>
-          <p class="small text-muted">Emergency helplines and the nearest facility, one tap away.</p>
-        </div>
+        <% pillars.forEach(p => { %>
+          <div class="col-md-6 col-lg-3">
+            <div class="mp-pillar-card">
+              <div class="mp-pillar-media" style="<%= p.imageUrl ? `background-image: url('${p.imageUrl}');` : '' %>">
+                <span class="mp-pillar-icon"><%= p.icon %></span>
+              </div>
+              <div class="mp-pillar-body">
+                <h5><%= p.title %></h5>
+                <p class="small text-muted mb-2"><%= p.tagline %></p>
+                <ul class="mp-pillar-list">
+                  <% p.bullets.forEach(b => { %><li><%= b %></li><% }) %>
+                </ul>
+                <a href="<%= p.link %>" class="mp-pillar-link"><%= p.linkText %> &rarr;</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
       </div>
     </div>
   </section>
