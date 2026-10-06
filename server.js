@@ -16,7 +16,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Body parser middleware
+// express.urlencoded handles standard <form> submissions (most of the app).
+// express.json handles JSON requests — specifically the chatbot widget, which sends
+// fetch() requests with Content-Type: application/json. Without this, req.body was
+// undefined for every chatbot message, crashing on req.body.message and silently
+// triggering the generic error fallback.
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Sessions (used for organizer login)
 app.use(session({
