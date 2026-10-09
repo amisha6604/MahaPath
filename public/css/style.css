@@ -1199,3 +1199,30 @@ a:hover { color: var(--mp-saffron-dark); }
 .mp-pillar-link:hover {
   color: var(--mp-saffron-dark);
 }
+
+/* ---------- Unified search results ---------- */
+.mp-search-group-heading {
+  color: var(--mp-maroon);
+  font-family: var(--mp-heading-font);
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--mp-saffron);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.mp-search-result-card {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--mp-cream-2);
+  border-left: 3px solid var(--mp-saffron);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--mp-text);
+  height: 100%;
+}
+
+.mp-search-result-card:hover {
+  box-shadow: 0 4px 12px rgba(107, 15, 26, 0.1);
+  color: var(--mp-text);
+}

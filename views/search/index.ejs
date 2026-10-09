@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mahapath | Search<%= query ? `: ${query}` : '' %></title>
+  <%- include('../partials/head') %>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<main class="mp-page">
+  <div class="container mt-4 mb-5">
+    <h2 class="mp-section-title mb-2">🔍 Search Results</h2>
+
+    <form action="/search" method="GET" class="mp-filter-bar d-flex gap-2 mb-4">
+      <input type="text" name="q" class="form-control" placeholder="Search everything..." value="<%= query %>">
+      <button type="submit" class="btn mp-btn-primary">Search</button>
+    </form>
+
+    <% if (!query) { %>
+      <div class="mp-empty"><p class="fs-5">Type something above to search events, facilities, incidents, FAQs, helplines, and nearby places all at once.</p></div>
+    <% } else if (totalCount === 0) { %>
+      <div class="mp-empty">
+        <p class="fs-5">No results for "<%= query %>".</p>
+        <p class="text-muted">Try a different word, or check the <a href="/faq">FAQ page</a> or <a href="/helplines">Helplines</a> directly.</p>
+      </div>
+    <% } else { %>
+      <p class="text-muted mb-4"><%= totalCount %> result<%= totalCount === 1 ? '' : 's' %> for "<%= query %>"</p>
+
+      <% if (results.events.length > 0) { %>
+        <h5 class="mp-search-group-heading">📅 Events</h5>
+        <div class="row g-3 mb-4">
+          <% results.events.forEach(e => { %>
+            <div class="col-12 col-md-6">
+              <a href="/event/<%= e._id %>" class="mp-search-result-card">
+                <strong><%= e.title %></strong>
+                <div class="small text-muted">📍 <%= e.location %> &middot; <%= e.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (results.facilities.length > 0) { %>
+        <h5 class="mp-search-group-heading">🏛️ Facilities</h5>
+        <div class="row g-3 mb-4">
+          <% results.facilities.forEach(f => { %>
+            <div class="col-12 col-md-6">
+              <a href="/facilities" class="mp-search-result-card">
+                <strong><%= f.name %></strong>
+                <div class="small text-muted"><%= f.type %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (results.incidents.length > 0) { %>
+        <h5 class="mp-search-group-heading">🚨 Incidents</h5>
+        <div class="row g-3 mb-4">
+          <% results.incidents.forEach(inc => { %>
+            <div class="col-12 col-md-6">
+              <a href="/incidents" class="mp-search-result-card">
+                <strong><%= inc.title %></strong>
+                <div class="small text-muted"><%= inc.severity %> &middot; <%= inc.location %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (results.faqs.length > 0) { %>
+        <h5 class="mp-search-group-heading">❓ FAQs</h5>
+        <div class="row g-3 mb-4">
+          <% results.faqs.forEach(faq => { %>
+            <div class="col-12 col-md-6">
+              <a href="/faq" class="mp-search-result-card">
+                <strong><%= faq.question %></strong>
+                <div class="small text-muted"><%= faq.category %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (results.helplines.length > 0) { %>
+        <h5 class="mp-search-group-heading">☎️ Helplines</h5>
+        <div class="row g-3 mb-4">
+          <% results.helplines.forEach(h => { %>
+            <div class="col-12 col-md-6">
+              <a href="/helplines" class="mp-search-result-card">
+                <strong><%= h.name %></strong>
+                <div class="small text-muted">📞 <%= h.number %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (results.nearby.length > 0) { %>
+        <h5 class="mp-search-group-heading">🗺️ Nearby Places</h5>
+        <div class="row g-3 mb-4">
+          <% results.nearby.forEach(p => { %>
+            <div class="col-12 col-md-6">
+              <a href="/nearby/<%= p._id %>" class="mp-search-result-card">
+                <strong><%= p.name %></strong>
+                <div class="small text-muted"><%= p.city %></div>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+
+</body>
+</html>
