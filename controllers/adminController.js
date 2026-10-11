@@ -84,7 +84,7 @@ exports.dashboard = async (req, res) => {
 
 exports.listUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 });
+    const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
     res.render('admin/users', { users, error: null, success: null });
   } catch (err) {
     console.error('❌ Admin user list error:', err);
@@ -98,13 +98,13 @@ exports.updateUserRole = async (req, res) => {
     const targetId = req.params.id;
 
     if (!['visitor', 'organizer', 'admin'].includes(role)) {
-      const users = await User.find().sort({ createdAt: -1 });
+      const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
       return res.status(400).render('admin/users', { users, error: 'Invalid role.', success: null });
     }
 
     // Guard rail: don't let an admin accidentally demote themselves and get locked out
     if (targetId === req.session.user.id && role !== 'admin') {
-      const users = await User.find().sort({ createdAt: -1 });
+      const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
       return res.status(400).render('admin/users', {
         users,
         error: "You can't change your own role away from admin here — ask another admin to do it.",
@@ -113,7 +113,7 @@ exports.updateUserRole = async (req, res) => {
     }
 
     const user = await User.findByIdAndUpdate(targetId, { role }, { new: true });
-    const users = await User.find().sort({ createdAt: -1 });
+    const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
     res.render('admin/users', { users, error: null, success: `${user.username} is now "${role}".` });
   } catch (err) {
     console.error('❌ Admin role update error:', err);
@@ -129,15 +129,17 @@ exports.resetUserPassword = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      const users = await User.find().sort({ createdAt: -1 });
+      const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
       return res.status(404).render('admin/users', { users, error: 'User not found.', success: null });
     }
 
     const tempPassword = crypto.randomBytes(6).toString('hex'); // 12-character one-time password
     user.password = await bcrypt.hash(tempPassword, 10);
+    user.resetRequested = false;
+    user.resetRequestedAt = undefined;
     await user.save();
 
-    const users = await User.find().sort({ createdAt: -1 });
+    const users = await User.find().sort({ resetRequested: -1, createdAt: -1 });
     res.render('admin/users', {
       users,
       error: null,

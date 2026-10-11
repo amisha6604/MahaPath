@@ -64,6 +64,36 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.forgotForm = (req, res) => {
+  res.render('forgot-password', { error: null, submitted: false });
+};
+
+// Flags the account for an admin-initiated reset. Always shows the SAME confirmation
+// message whether or not the username exists — otherwise this form could be abused
+// to probe which usernames are registered (username enumeration).
+exports.forgotRequest = async (req, res) => {
+  try {
+    const validationError = firstError(req);
+    if (validationError) {
+      return res.render('forgot-password', { error: validationError, submitted: false });
+    }
+
+    const username = req.body.username.toLowerCase().trim();
+    const user = await User.findOne({ username });
+
+    if (user) {
+      user.resetRequested = true;
+      user.resetRequestedAt = new Date();
+      await user.save();
+    }
+
+    res.render('forgot-password', { error: null, submitted: true });
+  } catch (err) {
+    console.error('❌ Forgot password error:', err);
+    res.render('forgot-password', { error: 'Something went wrong. Please try again.', submitted: false });
+  }
+};
+
 exports.logout = (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');

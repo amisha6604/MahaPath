@@ -18,6 +18,10 @@ exports.loginValidation = [
   body('password').notEmpty().withMessage('Password is required.')
 ];
 
+exports.forgotValidation = [
+  body('username').trim().notEmpty().withMessage('Please enter your username.')
+];
+
 // ---------- Events ----------
 
 exports.eventValidation = [

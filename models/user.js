@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['visitor', 'organizer', 'admin'],
     default: 'visitor'
+  },
+  // Set when a user submits the "Forgot password?" form — surfaces as a badge for
+  // admins on /admin/users, and cleared once an admin performs the reset.
+  resetRequested: {
+    type: Boolean,
+    default: false
+  },
+  resetRequestedAt: {
+    type: Date
   }
 }, { timestamps: true });
 

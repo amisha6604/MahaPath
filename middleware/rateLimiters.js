@@ -17,6 +17,16 @@ exports.loginLimiter = rateLimit({
   handler: rateLimitHandler('Too many login attempts from this device. Please wait 15 minutes and try again.')
 });
 
+// Limits "forgot password" requests per IP — stops someone spamming the admin queue
+// by flagging lots of accounts for reset.
+exports.forgotLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Too many reset requests from this device. Please wait an hour and try again.')
+});
+
 // Limits registration attempts per IP — blocks automated spam account creation.
 exports.registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
