@@ -202,14 +202,26 @@ a:hover { color: var(--mp-saffron-dark); }
 }
 
 .mp-about-teaser-image {
+  position: relative;
   height: 220px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--mp-maroon) 0%, var(--mp-saffron) 100%);
+  overflow: hidden;
+  /* Solid maroon underneath so the box still looks intentional if the photo fails to load */
+  background-color: var(--mp-maroon);
+  background-image:
+    linear-gradient(135deg, rgba(107, 15, 26, 0.35) 0%, rgba(224, 123, 0, 0.25) 100%),
+    url('https://commons.wikimedia.org/wiki/Special:FilePath/Prayagraj_sangam.jpg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 5rem;
   box-shadow: 0 8px 24px rgba(107, 15, 26, 0.2);
+}
+
+.mp-about-teaser-om {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
 
 /* ---------- Nearby places horizontal scroller ---------- */
