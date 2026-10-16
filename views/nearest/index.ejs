@@ -56,6 +56,14 @@
   const statusMsg = document.getElementById('statusMsg');
   const results = document.getElementById('results');
 
+  // Facility names/contacts are entered by admins but still rendered via innerHTML below,
+  // so they are escaped — defence in depth rather than trusting any stored text.
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   document.getElementById('useLocationBtn').addEventListener('click', () => {
     if (!navigator.geolocation) {
       statusMsg.textContent = 'Geolocation is not supported by your browser — enter coordinates manually instead.';
@@ -109,11 +117,11 @@
         col.innerHTML = `
           <div class="card mp-card">
             <div class="card-body">
-              <span class="mp-badge mb-2 d-inline-block">${f.type}</span>
-              <h5 class="card-title">${f.name}</h5>
-              <p class="card-text fw-bold" style="color: var(--mp-maroon);">📏 ${f.distanceKm} km away</p>
-              ${f.contact ? `<p class="card-text mb-1">📞 ${f.contact}</p>` : ''}
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}" target="_blank" rel="noopener" class="btn btn-sm mp-btn-primary mt-2">Get Directions</a>
+              <span class="mp-badge mb-2 d-inline-block">${esc(f.type)}</span>
+              <h5 class="card-title">${esc(f.name)}</h5>
+              <p class="card-text fw-bold" style="color: var(--mp-maroon);">📏 ${esc(f.distanceKm)} km away</p>
+              ${f.contact ? `<p class="card-text mb-1">📞 ${esc(f.contact)}</p>` : ''}
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(f.lat)},${encodeURIComponent(f.lng)}" target="_blank" rel="noopener" class="btn btn-sm mp-btn-primary mt-2">Get Directions</a>
             </div>
           </div>
         `;

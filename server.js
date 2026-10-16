@@ -12,6 +12,18 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Safe way to embed server data inside a <script> tag. Plain JSON.stringify output is NOT
+// safe there: a value containing "</script>" would close the tag early and let attacker-
+// controlled text run as HTML/JS. Escaping <, >, & and the two JS line-separator characters
+// as unicode escapes keeps the output valid JSON/JS while making breakout impossible.
+app.locals.safeJson = (value) =>
+  JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+
 // Serve static files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 

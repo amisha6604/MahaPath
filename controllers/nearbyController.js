@@ -1,5 +1,13 @@
 const NearbyPlace = require('../models/nearbyPlace');
 
+// Only plain http(s) URLs with no quotes, parentheses, backslashes, spaces or angle brackets
+// are accepted. These values end up inside a CSS url(...) and an href, so this blocks both
+// CSS-injection via a crafted image URL and "javascript:" links via the maps URL.
+function cleanUrl(value) {
+  const url = (value || '').trim();
+  return /^https?:\/\/[^\s'"()<>\\]+$/i.test(url) ? url : '';
+}
+
 exports.list = async (req, res) => {
   try {
     const places = await NearbyPlace.find().sort({ displayOrder: 1, name: 1 });
@@ -27,7 +35,9 @@ exports.addForm = (req, res) => {
 
 exports.add = async (req, res) => {
   try {
-    const { name, city, distanceFromPrayagraj, shortDescription, history, imageUrl, mapsUrl, displayOrder } = req.body;
+    const { name, city, distanceFromPrayagraj, shortDescription, history, displayOrder } = req.body;
+    const imageUrl = cleanUrl(req.body.imageUrl);
+    const mapsUrl = cleanUrl(req.body.mapsUrl);
 
     if (!name || !city || !shortDescription || !history) {
       return res.status(400).render('nearby/add', {
@@ -65,7 +75,9 @@ exports.editForm = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { name, city, distanceFromPrayagraj, shortDescription, history, imageUrl, mapsUrl, displayOrder } = req.body;
+    const { name, city, distanceFromPrayagraj, shortDescription, history, displayOrder } = req.body;
+    const imageUrl = cleanUrl(req.body.imageUrl);
+    const mapsUrl = cleanUrl(req.body.mapsUrl);
 
     if (!name || !city || !shortDescription || !history) {
       const place = await NearbyPlace.findById(req.params.id);

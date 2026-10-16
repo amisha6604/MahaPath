@@ -167,9 +167,9 @@
     });
   }
 
-  makePieChart('eventsChart', <%- JSON.stringify(eventsByCategory) %>);
-  makePieChart('incidentsChart', <%- JSON.stringify(incidentsBySeverity) %>);
-  makePieChart('facilitiesChart', <%- JSON.stringify(facilitiesByType) %>);
+  makePieChart('eventsChart', <%- safeJson(eventsByCategory) %>);
+  makePieChart('incidentsChart', <%- safeJson(incidentsBySeverity) %>);
+  makePieChart('facilitiesChart', <%- safeJson(facilitiesByType) %>);
 </script>
 
 </body>

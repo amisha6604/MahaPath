@@ -3,7 +3,7 @@
 
   <script>
     (function () {
-      const notifications = <%- JSON.stringify(siteNotifications) %>;
+      const notifications = <%- safeJson(siteNotifications) %>;
       const wrap = document.getElementById('mpNotifications');
       const dismissedKey = 'mp-dismissed-banner';
 
@@ -22,18 +22,35 @@
 
       const extraCount = notifications.length - 1;
 
+      // Incident titles/locations come from ANY logged-in user, so they are untrusted.
+      // textContent treats everything as plain text — it can never be parsed as HTML.
       const bar = document.createElement('div');
-      bar.className = `mp-notif mp-notif-${top.severity.toLowerCase()}`;
-      bar.innerHTML = `
-        <a href="${top.link}" class="mp-notif-text">
-          ${top.text}${extraCount > 0 ? ` <span class="mp-notif-more">+${extraCount} more active alert${extraCount > 1 ? 's' : ''}</span>` : ''}
-        </a>
-        <button type="button" class="mp-notif-close" aria-label="Dismiss">&times;</button>
-      `;
-      bar.querySelector('.mp-notif-close').addEventListener('click', () => {
+      bar.className = 'mp-notif mp-notif-' + String(top.severity).toLowerCase().replace(/[^a-z]/g, '');
+
+      const link = document.createElement('a');
+      link.href = top.link;
+      link.className = 'mp-notif-text';
+      link.appendChild(document.createTextNode(top.text));
+
+      if (extraCount > 0) {
+        const more = document.createElement('span');
+        more.className = 'mp-notif-more';
+        more.textContent = ' +' + extraCount + ' more active alert' + (extraCount > 1 ? 's' : '');
+        link.appendChild(more);
+      }
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'mp-notif-close';
+      closeBtn.setAttribute('aria-label', 'Dismiss');
+      closeBtn.textContent = '\u00d7';
+      closeBtn.addEventListener('click', () => {
         try { sessionStorage.setItem(dismissedKey, top.id); } catch (e) {}
         bar.remove();
       });
+
+      bar.appendChild(link);
+      bar.appendChild(closeBtn);
       wrap.appendChild(bar);
     })();
   </script>

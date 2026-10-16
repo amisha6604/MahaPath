@@ -66,8 +66,16 @@
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  const events = <%- JSON.stringify(mappedEvents || []) %>;
-  const facilities = <%- JSON.stringify(mappedFacilities || []) %>;
+  const events = <%- safeJson(mappedEvents || []) %>;
+  const facilities = <%- safeJson(mappedFacilities || []) %>;
+
+  // Leaflet's bindPopup() renders strings as HTML, and event/facility text is entered by
+  // organizers/admins — so every dynamic value is escaped before going into a popup.
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
 
   // Distinct color per facility type so they're visually distinguishable at a glance
   const facilityColors = {
@@ -117,14 +125,14 @@
         fillOpacity: style.fillOpacity,
         weight: 1
       })
-        .bindPopup(`<strong>${f.name}</strong><br>Crowd density: <strong>${f.density}</strong>`)
+        .bindPopup(`<strong>${esc(f.name)}</strong><br>Crowd density: <strong>${esc(f.density)}</strong>`)
         .addTo(densityLayer);
     }
   });
 
   events.forEach(event => {
     const marker = L.marker(event.latlng)
-      .bindPopup(`🚩 <strong>${event.title}</strong><br>${event.location}<br>🏷️ ${event.category}<br>🕔 ${event.time} · ${event.date}`);
+      .bindPopup(`🚩 <strong>${esc(event.title)}</strong><br>${esc(event.location)}<br>🏷️ ${esc(event.category)}<br>🕔 ${esc(event.time)} · ${esc(event.date)}`);
     marker.addTo(eventLayer);
     allMarkers.push(marker);
   });
@@ -135,7 +143,7 @@
     }
     const marker = L.marker(f.latlng, {
       icon: coloredDivIcon(facilityColors[f.type] || '#888', facilityEmoji[f.type] || '📍')
-    }).bindPopup(`<strong>${f.name}</strong><br>${f.type}${f.description ? '<br>' + f.description : ''}${f.contact ? '<br>📞 ' + f.contact : ''}`);
+    }).bindPopup(`<strong>${esc(f.name)}</strong><br>${esc(f.type)}${f.description ? '<br>' + esc(f.description) : ''}${f.contact ? '<br>📞 ' + esc(f.contact) : ''}`);
     marker.addTo(facilityLayersByType[f.type]);
     allMarkers.push(marker);
   });

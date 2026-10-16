@@ -65,12 +65,15 @@
 <% if (coords) { %>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const coords = <%- JSON.stringify(coords) %>;
+    const coords = <%- safeJson(coords) %>;
     const map = L.map('eventMap').setView(coords, 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    L.marker(coords).addTo(map).bindPopup(<%- JSON.stringify(event.title) %>).openPopup();
+    // bindPopup() renders strings as HTML, so pass a text node wrapper instead of the raw title
+    const popupEl = document.createElement('strong');
+    popupEl.textContent = <%- safeJson(event.title) %>;
+    L.marker(coords).addTo(map).bindPopup(popupEl).openPopup();
   </script>
 <% } %>
 
