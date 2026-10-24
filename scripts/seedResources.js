@@ -18,16 +18,7 @@ const facilities = [
   { name: 'Medical Camp - Sector 1 (approx.)', type: 'Medical Camp', lat: 25.4300, lng: 81.8770, description: 'First-aid and emergency medical camp.' }
 ];
 
-const helplines = [
-  { name: 'Mahakumbh Control Room', number: '1920', category: 'General Mahakumbh Helpline', description: 'Verify against the current official number before publishing.' },
-  { name: 'Police Emergency', number: '112', category: 'Police' },
-  { name: 'Ambulance / Medical Emergency', number: '108', category: 'Medical' },
-  { name: 'Fire Emergency', number: '101', category: 'Fire' },
-  { name: 'Women Helpline', number: '1091', category: 'Women Helpline' },
-  { name: 'Tourist Helpline (India)', number: '1363', category: 'Tourist Helpline' },
-  { name: 'Disaster Management Helpline', number: '1070', category: 'Disaster Management' },
-  { name: 'Railway Enquiry', number: '139', category: 'Railway Enquiry' }
-];
+const helplines = require('../data/curatedHelplines');
 
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {

@@ -113,9 +113,17 @@ app.use((err, req, res, next) => {
 });
 
 // MongoDB Connection
+const { ensureCuratedContent } = require('./utils/bootstrapContent');
+
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
+  .then(async () => {
     console.log('✅ MongoDB Connected');
+    try {
+      await ensureCuratedContent();
+    } catch (err) {
+      // Never let a content-setup problem stop the site from serving requests
+      console.error('⚠️ Could not set up curated content:', err.message);
+    }
   })
   .catch(err => {
     console.error('❌ MongoDB connection error:', err);

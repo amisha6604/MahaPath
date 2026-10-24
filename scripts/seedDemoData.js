@@ -1,4 +1,5 @@
-// Generates realistic-LOOKING demo data so the site doesn't feel empty during development/demos.
+// Generates realistic-LOOKING sample data so the site doesn't feel empty during development/demos.
+// Text comes from curated pools in data/demoText.js (no lorem ipsum, no random product names).
 //
 // IMPORTANT — read this before running:
 // - This is FICTIONAL data for portfolio/demo purposes. It is NOT real Mahakumbh data.
@@ -25,6 +26,7 @@ const Incident = require('../models/incident');
 const TrafficDiversion = require('../models/trafficDiversion');
 const CrowdReport = require('../models/crowdReport');
 const locationCoords = require('../utils/locationCoords');
+const T = require('../data/demoText');
 
 const DEMO_PASSWORD = 'Demo@1234';
 
@@ -34,7 +36,7 @@ function indianMobileNumber() {
   return '9' + faker.string.numeric(9);
 }
 function indianLandlineNumber() {
-  return `05${faker.string.numeric(2)}-2${faker.string.numeric(6)}`;
+  return `0532-2${faker.string.numeric(6)}`; // Prayagraj STD code
 }
 
 const COUNTS = {
@@ -94,75 +96,65 @@ async function seedEvents(users) {
     return;
   }
 
-  const categories = Event.CATEGORIES;
-  const locations = Object.keys(locationCoords);
+  const allLocations = Object.keys(locationCoords);
   const organizers = users.filter(u => u.role === 'organizer');
-
-  const titleTemplates = [
-    'Morning Aarti at {location}',
-    'Evening Ganga Aarti',
-    'Shahi Snan Procession',
-    'Satsang with {location} Ashram',
-    'Cultural Program: Classical Music Evening',
-    'Bhajan Sandhya',
-    'Community Langar Seva',
-    'Yoga & Meditation Session',
-    'Sadhu Sabha Gathering',
-    'Kirtan and Devotional Singing'
-  ];
 
   const events = [];
   for (let i = 0; i < COUNTS.events; i++) {
-    const location = randomFromArray(locations);
-    const category = randomFromArray(categories);
-    const organizer = randomFromArray(organizers);
-    const daysOffset = faker.number.int({ min: -10, max: 60 }); // spread across past and future
+    const tpl = randomFromArray(T.EVENT_TEMPLATES);
+    const pool = tpl.places.filter(l => allLocations.includes(l));
+    const location = randomFromArray(pool.length ? pool : allLocations);
+
+    const date = new Date(Date.now() + faker.number.int({ min: -10, max: 60 }) * 86400000);
+    date.setHours(0, 0, 0, 0);
 
     events.push({
-      title: randomFromArray(titleTemplates).replace('{location}', location),
-      description: faker.lorem.sentences(2),
+      title: tpl.title,
+      description: randomFromArray(tpl.descriptions),
       location,
-      category,
-      date: faker.date.soon({ days: 60, refDate: new Date(Date.now() + daysOffset * 86400000) }),
-      time: `${faker.number.int({ min: 4, max: 20 })}:${randomFromArray(['00', '15', '30', '45'])}`,
-      createdBy: organizer._id
+      category: tpl.category,
+      date,
+      time: randomFromArray(tpl.times),
+      createdBy: randomFromArray(organizers)._id
     });
   }
 
   await Event.insertMany(events);
-  console.log(`✅ Seeded ${events.length} demo events.`);
+  console.log(`✅ Seeded ${events.length} sample events.`);
 }
 
 async function seedExtraFacilities(users) {
-  const existingDemoFacilities = await Facility.countDocuments({ description: { $regex: '\\[Demo data\\]' } });
-  if (existingDemoFacilities > 0) {
-    console.log(`ℹ️ Demo facilities already seeded (${existingDemoFacilities} found) — skipping.`);
+  const existingSample = await Facility.countDocuments({
+    $or: [{ isDemo: true }, { description: { $regex: '\\[Demo data\\]' } }]
+  });
+  if (existingSample > 0) {
+    console.log(`ℹ️ Sample facilities already seeded (${existingSample} found) — skipping.`);
     return;
   }
 
   const organizers = users.filter(u => u.role === 'organizer' || u.role === 'visitor');
-
-  // Base points to jitter around — real Prayagraj-area coordinates
   const basePoints = Object.values(locationCoords);
 
   const facilities = [];
   for (let i = 0; i < COUNTS.extraFacilities; i++) {
     const base = randomFromArray(basePoints);
     const type = randomFromArray(Facility.TYPES);
+    const meta = T.FACILITY_BY_TYPE[type];
     facilities.push({
-      name: `${type} — Demo Sector ${faker.number.int({ min: 1, max: 20 })}`,
+      name: `Sector ${i + 1} ${meta.label}`,
       type,
-      description: `[Demo data] Illustrative ${type.toLowerCase()} entry generated for portfolio purposes — not a real facility.`,
+      description: meta.description,
       lat: jitterCoord(base[0], 2),
       lng: jitterCoord(base[1], 2),
       contact: type === 'Hospital' || type === 'Police Booth' ? indianLandlineNumber() : '',
       capacity: type === 'Parking' || type === 'Medical Camp' ? faker.number.int({ min: 100, max: 3000 }) : undefined,
+      isDemo: true,
       createdBy: randomFromArray(organizers)._id
     });
   }
 
   await Facility.insertMany(facilities);
-  console.log(`✅ Seeded ${facilities.length} additional demo facilities (clearly labeled as demo data).`);
+  console.log(`✅ Seeded ${facilities.length} sample facilities.`);
 }
 
 async function seedLostFound(users) {
@@ -178,14 +170,30 @@ async function seedLostFound(users) {
   for (let i = 0; i < COUNTS.lostFound; i++) {
     const reportType = randomFromArray(LostFound.REPORT_TYPES);
     const isPerson = reportType.includes('Person');
+    const isFound = reportType.startsWith('Found');
+    const place = randomFromArray(locations);
+
+    let name;
+    let description;
+    if (isPerson) {
+      name = faker.person.fullName();
+      const age = faker.number.int({ min: 6, max: 78 });
+      const outfit = `${randomFromArray(T.PERSON_COLORS)} ${randomFromArray(T.PERSON_GARMENTS)}`;
+      const note = randomFromArray(isFound ? T.FOUND_PERSON_NOTES : T.LOST_PERSON_NOTES);
+      description = `Age about ${age}, wearing a ${outfit}. ${note}`;
+    } else {
+      const item = randomFromArray(T.LOST_ITEMS);
+      name = item.name;
+      description = isFound
+        ? `${item.description} Found near ${place} and deposited at the Lost & Found centre.`
+        : item.description;
+    }
 
     reports.push({
       reportType,
-      name: isPerson ? faker.person.fullName() : faker.commerce.productName(),
-      description: isPerson
-        ? `Age ~${faker.number.int({ min: 5, max: 75 })}, ${faker.color.human()} clothing, ${faker.lorem.sentence()}`
-        : faker.lorem.sentence(),
-      lastSeenLocation: randomFromArray(locations),
+      name,
+      description,
+      lastSeenLocation: place,
       contactInfo: indianMobileNumber(),
       status: Math.random() > 0.4 ? 'Open' : 'Resolved',
       reportedBy: randomFromArray(users)._id
@@ -193,7 +201,7 @@ async function seedLostFound(users) {
   }
 
   await LostFound.insertMany(reports);
-  console.log(`✅ Seeded ${reports.length} demo Lost & Found reports.`);
+  console.log(`✅ Seeded ${reports.length} sample Lost & Found reports.`);
 }
 
 async function seedIncidents(users) {
@@ -206,20 +214,12 @@ async function seedIncidents(users) {
   const locations = Object.keys(locationCoords);
   const incidents = [];
 
-  const titlesByCategory = {
-    'Medical': ['Person fainted in crowd', 'Elderly pilgrim needs assistance', 'Heat exhaustion case'],
-    'Security': ['Suspicious unattended bag', 'Overcrowding at entry gate', 'Minor altercation reported'],
-    'Fire': ['Small fire near food stall', 'Electrical spark reported'],
-    'Crowd Crush': ['Dangerous crowd density at bridge', 'Bottleneck at Gate 4'],
-    'Infrastructure': ['Barricade collapsed', 'Pontoon bridge instability reported'],
-    'Other': ['Lost child reported', 'Public announcement system malfunction']
-  };
-
   for (let i = 0; i < COUNTS.incidents; i++) {
     const category = randomFromArray(Incident.CATEGORIES);
+    const entry = randomFromArray(T.INCIDENTS[category]);
     incidents.push({
-      title: randomFromArray(titlesByCategory[category] || ['General incident reported']),
-      description: faker.lorem.sentences(2),
+      title: entry.title,
+      description: entry.description,
       category,
       severity: randomFromArray(Incident.SEVERITIES),
       status: randomFromArray(Incident.STATUSES),
@@ -229,7 +229,7 @@ async function seedIncidents(users) {
   }
 
   await Incident.insertMany(incidents);
-  console.log(`✅ Seeded ${incidents.length} demo incidents.`);
+  console.log(`✅ Seeded ${incidents.length} sample incidents.`);
 }
 
 async function seedTraffic(users) {
@@ -243,13 +243,15 @@ async function seedTraffic(users) {
   const diversions = [];
 
   for (let i = 0; i < COUNTS.traffic; i++) {
-    const start = faker.date.soon({ days: 30, refDate: new Date(Date.now() - 10 * 86400000) });
+    const start = new Date(Date.now() + faker.number.int({ min: -10, max: 20 }) * 86400000);
     const end = new Date(start.getTime() + faker.number.int({ min: 1, max: 5 }) * 86400000);
+    const route = randomFromArray(T.TRAFFIC_ROUTES);
+    const entry = randomFromArray(T.TRAFFIC_ENTRIES);
 
     diversions.push({
-      title: `${randomFromArray(['Route diversion', 'One-way traffic', 'Vehicle restriction'])} near ${randomFromArray(Object.keys(locationCoords))}`,
-      description: faker.lorem.sentence(),
-      affectedRoute: `${faker.location.street()} area`,
+      title: `${entry.title}: ${route}`,
+      description: entry.description,
+      affectedRoute: route,
       severity: randomFromArray(['Low', 'Medium', 'High']),
       startDate: start,
       endDate: end,
@@ -258,7 +260,7 @@ async function seedTraffic(users) {
   }
 
   await TrafficDiversion.insertMany(diversions);
-  console.log(`✅ Seeded ${diversions.length} demo traffic advisories.`);
+  console.log(`✅ Seeded ${diversions.length} sample traffic advisories.`);
 }
 
 async function seedCrowdReports(users) {
@@ -282,7 +284,7 @@ async function seedCrowdReports(users) {
       reports.push({
         facility: facility._id,
         density: randomFromArray(CrowdReport.DENSITY_LEVELS),
-        note: Math.random() > 0.6 ? faker.lorem.sentence() : '',
+        note: Math.random() > 0.6 ? randomFromArray(T.CROWD_NOTES) : '',
         reportedBy: randomFromArray(organizers)._id,
         createdAt: faker.date.recent({ days: 5 })
       });
@@ -290,7 +292,7 @@ async function seedCrowdReports(users) {
   }
 
   await CrowdReport.insertMany(reports);
-  console.log(`✅ Seeded ${reports.length} demo crowd density reports across ${facilities.length} facilities.`);
+  console.log(`✅ Seeded ${reports.length} sample crowd density reports across ${facilities.length} facilities.`);
 }
 
 mongoose.connect(process.env.MONGO_URI)
@@ -305,7 +307,7 @@ mongoose.connect(process.env.MONGO_URI)
     await seedTraffic(users);
     await seedCrowdReports(users);
 
-    console.log('\n✅ Done. This is fictional demo data for development/portfolio purposes.');
+    console.log('\n✅ Done. This is sample data for development/portfolio purposes.');
     console.log(`   Log in as any demo user with password: ${DEMO_PASSWORD}`);
     console.log('   Helplines and Nearby Places were NOT touched — those stay factual/curated.');
     process.exit(0);

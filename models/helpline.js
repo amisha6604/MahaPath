@@ -8,7 +8,8 @@ const HELPLINE_CATEGORIES = [
   'Women Helpline',
   'Tourist Helpline',
   'Disaster Management',
-  'Railway Enquiry'
+  'Railway Enquiry',
+  'Food & Supplies'
 ];
 
 const helplineSchema = new mongoose.Schema({
